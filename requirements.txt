@@ -1,4 +1,4 @@
-python==3.10
+python_version >= 3.10, < 3.11
 absl-py==1.4.0
 aiofiles==22.1.0
 aiohappyeyeballs @ file:///home/conda/feedstock_root/build_artifacts/aiohappyeyeballs_1724167852130/work
