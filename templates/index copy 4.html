@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Optimization Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+    <!-- MathJax Configuration -->
+    <script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true,
+            packages: {'[+]': ['ams']}
+        },
+        options: {
+            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            ignoreHtmlClass: 'tex2jax_ignore',
+            processHtmlClass: 'tex2jax_process'
+        },
+        loader: {
+            load: ['[tex]/ams']
+        },
+        startup: {
+            ready: () => {
+                MathJax.startup.defaultReady();
+                document.addEventListener('DOMContentLoaded', () => {
+                    MathJax.typesetPromise();
+                });
+            }
+        }
+    };
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    <!-- Highlight.js Configuration -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+    <style>
+        /* Adjusting fonts and colors */
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #fffefe;
+        }
+
+        .sidebar {
+            background-color: #e3f6f5;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            color: #000000;
+            border-radius: 1rem;
+            margin-right: 2rem;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .preview-table {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .preview-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+            color: #272343;
+        }
+        .preview-table th {
+            position: sticky;
+            top: 0;
+            background: #fffefe;
+            z-index: 10;
+            padding: 0.25rem 0.5rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+        }
+        .preview-table td {
+            padding: 0.25rem 0.5rem;
+            border-top: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .progress-stepper {
+            position: fixed;
+            left: 1rem;
+            bottom: 1rem;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+        .progress-stepper-inner {
+            background: rgba(255,255,255,0.95);
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            pointer-events: auto;
+        }
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+            transition: all 0.5s ease;
+        }
+        .step-item.completed {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        .step-item.completed-keep {
+            opacity: 1;
+            transform: none;
+        }
+        .step-item.current {
+            color: #ffd803;
+        }
+        .step-item.future {
+            color: #d1d5db;
+        }
+        .circle-spin {
+            transform-origin: 50% 50%;
+            animation: circleSpin 1s linear infinite;
+        }
+        @keyframes circleSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinner-circle {
+            stroke-dasharray: 283;
+            stroke-dashoffset: 75;
+            stroke-width: 4;
+            stroke-linecap: round;
+            animation: spinnerDash 1.5s ease-in-out infinite;
+        }
+        @keyframes spinnerDash {
+            0% {
+                stroke-dashoffset: 283;
+            }
+            50% {
+                stroke-dashoffset: 75;
+            }
+            100% {
+                stroke-dashoffset: 283;
+            }
+        }
+        .chat-container {
+            max-height: calc(100vh - 400px);
+            overflow-y: auto;
+        }
+        .chat-message {
+            max-width: 80%;
+            margin-bottom: 1rem;
+            border-radius: 1rem;
+        }
+        .chat-message.user {
+            margin-left: auto;
+            background-color: #bae8e8;
+            color: #272343;
+        }
+        .chat-message.assistant {
+            margin-right: auto;
+            background-color: #fffefe;
+        }
+        .chat-message-content {
+            padding: 1rem;
+            border-radius: 1rem;
+        }
+        .problem-description-container {
+            position: fixed;
+            bottom: 0;
+            left: 420px;
+            background: #fffefe;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            z-index: 40;
+            width: calc(100% - 420px);
+            border-radius: 1rem;
+        }
+        .problem-description-inner {
+            margin: 0 auto;
+        }
+        .main-content {
+            padding-bottom: 180px;
+            padding-left: 420px;
+        }
+        .resize-handle {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #e3f6f5;
+            cursor: col-resize;
+            transition: background 0.2s;
+            border-radius: 0 1rem 1rem 0;
+        }
+        .resize-handle:hover {
+            background: #ffd803;
+        }
+        .auto-resize-textarea {
+            min-height: 60px;
+            max-height: 200px;
+            resize: none;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+            border-radius: 1rem;
+        }
+        .auto-resize-textarea::-webkit-scrollbar {
+            width: 6px;
+        }
+        .auto-resize-textarea::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        .auto-resize-textarea::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 3px;
+        }
+        .welcome-message {
+            text-align: center;
+            padding: 2rem;
+            color: #272343;
+            border-radius: 1rem;
+        }
+        .welcome-message h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .welcome-message p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #2d334a;
+        }
+        .button {
+            background-color: #ffd803;
+            color: #272343;
+            padding: 12px 24px;
+            border-radius: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .button:hover {
+            background-color: #bae8e8;
+        }
+        .chat-message-content h1, 
+        .chat-message-content h2, 
+        .chat-message-content h3, 
+        .chat-message-content h4, 
+        .chat-message-content h5, 
+        .chat-message-content h6 {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+            color: #272343;
+        }
+        
+        .chat-message-content h1 { font-size: 1.5em; }
+        .chat-message-content h2 { font-size: 1.3em; }
+        .chat-message-content h3 { font-size: 1.1em; }
+        
+        .chat-message-content p {
+            margin-bottom: 1em;
+            line-height: 1.6;
+        }
+        
+        .chat-message-content ul, 
+        .chat-message-content ol {
+            margin-bottom: 1em;
+            padding-left: 2em;
+        }
+        
+        .chat-message-content li {
+            margin-bottom: 0.5em;
+        }
+        
+        .chat-message-content code:not(.hljs) {
+            background-color: #f3f4f6;
+            padding: 0.2em 0.4em;
+            border-radius: 0.3em;
+            font-family: monospace;
+            color: #d63384;
+        }
+        
+        .chat-message-content pre {
+            background-color: #f8f8f8;
+            padding: 1em;
+            border-radius: 0.5em;
+            overflow-x: auto;
+            margin-bottom: 1em;
+        }
+        
+        .chat-message-content pre code.hljs {
+            padding: 1em;
+            border-radius: 0.5em;
+            font-size: 0.9em;
+            line-height: 1.5;
+            background-color: #f8f8f8;
+        }
+        
+        .chat-message-content blockquote {
+            border-left: 4px solid #bae8e8;
+            padding-left: 1em;
+            margin-left: 0;
+            color: #4a5568;
+            margin-bottom: 1em;
+        }
+        
+        .chat-message-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+        
+        .chat-message-content th, 
+        .chat-message-content td {
+            border: 1px solid #e2e8f0;
+            padding: 0.5em;
+            text-align: left;
+        }
+        
+        .chat-message-content th {
+            background-color: #f7fafc;
+        }
+        
+        .chat-message-content tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+    
+        /* Math expression styling */
+        .math-display {
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin: 1em 0;
+        }
+        
+        .math-inline {
+            color: #2b6cb0;
+        }
+        
+        /* Specific styling for input */
+        input[type="password"] {
+            color: #272343;
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen" x-data="appData()">
+<div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="sidebar" x-ref="sidebar">
+        <div class="flex-1 flex flex-col p-6 space-y-6 overflow-hidden">
+            <h1 class="text-2xl font-bold text-black mb-2 flex items-center gap-2">
+                <i class="fas fa-robot"></i> Intelligent Optimization Assistant
+            </h1>
+            <!-- API Key -->
+            <div class="flex items-center gap-2">
+                <label class="block text-sm font-medium text-black mb-1"><i class="fas fa-key"></i> OpenAI API Key</label>
+                <input type="password" x-model="apiKey" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <!-- File Upload -->
+            <div>
+                <label class="block text-sm font-medium text-black mb-1 flex items-center gap-2">
+                    <i class="fas fa-upload"></i> Upload CSV Files
+                </label>
+                <div class="flex items-center gap-2">
+                    <button @click="$refs.fileInput.click()" class="px-3 py-1.5 bg-white text-black rounded hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-file-csv"></i> Select Files
+                    </button>
+                    <input type="file" multiple accept=".csv" class="hidden" x-ref="fileInput" @change="handleFileSelect($event)">
+                </div>
+                <!-- File List -->
+                <div class="mt-2 space-y-1">
+                    <template x-for="(file, index) in files" :key="index">
+                        <div class="flex items-center justify-between bg-gray-100 rounded px-2 py-1">
+                            <span class="text-xs text-black truncate max-w-[200px]" x-text="file.name"></span>
+                            <button @click="removeFile(index)" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <!-- File Preview -->
+            <div x-show="filePreviews.length > 0" class="flex-1 overflow-y-auto">
+                <h3 class="text-sm font-medium text-black mb-2 flex items-center gap-2">
+                    <i class="fas fa-eye"></i> File Preview
+                </h3>
+                <div class="space-y-4">
+                    <template x-for="(preview, index) in filePreviews" :key="index">
+                        <div class="bg-gray-100 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-medium text-black" x-text="preview.name"></h4>
+                            </div>
+                            <div class="preview-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <template x-for="header in preview.headers" :key="header">
+                                                <th class="px-2 py-1 text-left" x-text="header"></th>
+                                            </template>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="(row, rowIndex) in preview.data" :key="rowIndex">
+                                            <tr>
+                                                <template x-for="(cell, cellIndex) in row" :key="cellIndex">
+                                                    <td class="px-2 py-1 border-t" x-text="cell"></td>
+                                                </template>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <div class="resize-handle" 
+             @mousedown="startResize"
+             @touchstart="startResize"></div>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col">
+        <!-- Chat Area -->
+        <div class="flex-1 p-8 overflow-y-auto main-content">
+            <div class="chat-container space-y-4">
+                <!-- Welcome Message -->
+                <div x-show="chatMessages.length === 0" class="welcome-message">
+                    <h2><i class="fas fa-smile-beam"></i> Welcome to Intelligent Optimization Assistant</h2>
+                    <p>Upload your CSV files and describe your optimization problem to get started.</p>
+                </div>
+                <!-- Chat Messages -->
+                <template x-for="(message, index) in chatMessages" :key="index">
+                    <div :class="['chat-message', message.role === 'user' ? 'user' : 'assistant']">
+                        <div class="chat-message-content" x-html="DOMPurify.sanitize(marked.parse(message.content))"></div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </main>
+
+    <!-- Problem Description (Fixed at Bottom and connected to Sidebar) -->
+    <div class="problem-description-container">
+        <div class="problem-description-inner space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+                    <i class="fas fa-pencil-alt"></i> Problem Description
+                </label>
+                <textarea 
+                    x-model="query" 
+                    x-ref="queryTextarea"
+                    @input="autoResizeTextarea"
+                    rows="2"
+                    class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize-textarea"
+                    placeholder="Enter your question here..."></textarea>
+            </div>
+            <div class="flex justify-center">
+                <button @click="uploadFiles()"
+                        :disabled="isUploading || isAnalyzing || isSolving || files.length === 0 || !apiKey || !query"
+                        class="button">
+                    <i class="fas fa-play"></i>
+                    <span x-show="!isUploading && !isAnalyzing && !isSolving">Start Analysis</span>
+                    <span x-show="isUploading || isAnalyzing || isSolving">Processing...</span>
+                </button>
+            </div>
+            <!-- Error Message -->
+            <div x-show="error" class="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded relative text-xs text-center" role="alert">
+                <span x-text="error"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Stepper (Bottom Left) -->
+    <div class="progress-stepper" x-show="showStepper" x-transition:enter="slide-up" x-transition:leave="slide-up">
+        <div class="progress-stepper-inner">
+            <template x-for="(step, idx) in steps" :key="idx">
+                <div :class="['step-item', 
+                    currentStep > idx ? 'completed' : 
+                    currentStep === idx ? 'current' : 
+                    completedSteps.includes(idx) ? 'completed-keep' : 'future']"
+                    x-show="currentStep >= idx || completedSteps.includes(idx)">
+                    <div class="relative">
+                        <svg width="24" height="24" viewBox="0 0 48 48">
+                            <circle cx="24" cy="24" r="20" fill="#f3f4f6" />
+                            <circle
+                                cx="24" cy="24" r="20"
+                                fill="none"
+                                :stroke="currentStep > idx ? '#22c55e' : (currentStep === idx ? '#ffd803' : (completedSteps.includes(idx) ? '#22c55e' : '#d1d5db'))"
+                                stroke-width="4"
+                                :class="currentStep === idx ? 'spinner-circle' : ''"
+                                :stroke-dasharray="currentStep === idx ? '283' : '125.6'"
+                                :stroke-dashoffset="currentStep > idx ? 0 : (currentStep === idx ? '75' : '0')"
+                                style="transition: stroke 0.3s;"
+                            />
+                            <template x-if="currentStep > idx || completedSteps.includes(idx)">
+                                <polyline points="16,24 22,30 32,18" fill="none" stroke="#22c55e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                            </template>
+                        </svg>
+                    </div>
+                    <span x-text="step"></span>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+<script>
+function appData() {
+    return {
+        files: [],
+        filePreviews: [],
+        apiKey: '',
+        query: '',
+        isUploading: false,
+        isAnalyzing: false,
+        isSolving: false,
+        currentStep: 0,
+        steps: [
+            'File Embedding',
+            'Semantic Analysis',
+            'Template Search',
+            'Answer Generation'
+        ],
+        progress: 0,
+        chatMessages: [],
+        error: null,
+        showStepper: false,
+        progressPercent: 0,
+        completedSteps: [],
+        autoResizeTextarea() {
+            const textarea = this.$refs.queryTextarea;
+            textarea.style.height = 'auto';
+            const newHeight = Math.min(textarea.scrollHeight, 200);
+            textarea.style.height = newHeight + 'px';
+        },
+        async handleFileSelect(event) {
+            const newFiles = Array.from(event.target.files || event.dataTransfer.files);
+            for (let file of newFiles) {
+                if (file.name.endsWith('.csv')) {
+                    this.files.push(file);
+                    await this.previewFile(file);
+                }
+            }
+            if (this.files.length > 0) {
+                this.showStepper = true;
+                this.currentStep = 0;
+                setTimeout(() => {
+                    this.currentStep = 1;
+                    this.completedSteps.push(0);
+                }, 500);
+            }
+        },
+        async previewFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const text = e.target.result;
+                const lines = text.split('\n');
+                const headers = lines[0].split(',');
+                const data = lines.slice(1).map(line => line.split(','));
+                this.filePreviews.push({
+                    name: file.name,
+                    headers: headers,
+                    data: data
+                });
+            };
+            reader.readAsText(file);
+        },
+        removeFile(index) {
+            this.files.splice(index, 1);
+            this.filePreviews.splice(index, 1);
+            if (this.files.length === 0) {
+                this.showStepper = false;
+            }
+        },
+        async uploadFiles() {
+            if (!this.query) {
+                this.error = 'Please enter your question';
+                return;
+            }
+            
+            this.isUploading = true;
+            this.error = null;
+            
+            this.chatMessages.push({
+                role: 'user',
+                content: this.query
+            });
+
+            const formData = new FormData();
+            for (let file of this.files) {
+                formData.append('files[]', file);
+            }
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    this.currentStep = 2;
+                    this.completedSteps.push(1);
+                    await this.analyze();
+                } else {
+                    throw new Error(data.error || 'Upload failed');
+                }
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.isUploading = false;
+                this.query = '';
+                this.$nextTick(() => {
+                    this.autoResizeTextarea();
+                });
+            }
+        },
+        async analyze() {
+            if (!this.query || !this.apiKey) {
+                this.error = 'Please enter your question and API key';
+                return;
+            }
+            this.isAnalyzing = true;
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: this.query,
+                        api_key: this.apiKey
+                    })
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    setTimeout(() => {
+                        this.currentStep = 3;
+                    }, 500);
+                    await this.solve(data.problem_type);
+                } else {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.isAnalyzing = false;
+            }
+        },
+        async solve(problemType) {
+            this.isSolving = true;
+            try {
+                const response = await fetch('/solve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: this.query,
+                        api_key: this.apiKey,
+                        problem_type: problemType
+                    })
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    setTimeout(() => {
+                        this.currentStep = 4;
+                    }, 500);
+                    setTimeout(() => {
+                        this.showStepper = false;
+                    }, 1000);
+                    
+                    this.chatMessages.push({
+                        role: 'assistant',
+                        content: data.solution
+                    });
+                    
+                    this.$nextTick(() => {
+                        // Process Markdown first
+                        const messageElements = document.querySelectorAll('.chat-message-content');
+                        messageElements.forEach(el => {
+                            if (el.innerHTML === el.innerText) {
+                                el.innerHTML = DOMPurify.sanitize(marked.parse(el.innerHTML));
+                            }
+                        });
+                        
+                        // Then highlight code
+                        document.querySelectorAll('.chat-message-content pre code').forEach((block) => {
+                            hljs.highlightElement(block);
+                        });
+                        
+                        // Finally process math expressions
+                        MathJax.typesetPromise().catch(err => console.log('MathJax typeset error:', err));
+                    });
+                } else {
+                    throw new Error(data.error || 'Solution failed');
+                }
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.isSolving = false;
+            }
+        },
+        startResize(e) {
+            e.preventDefault();
+            const sidebar = this.$refs.sidebar;
+            const startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            const startWidth = sidebar.offsetWidth;
+
+            const handleMouseMove = (e) => {
+                const currentX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+                const diff = currentX - startX;
+                const newWidth = Math.max(300, Math.min(800, startWidth + diff));
+                sidebar.style.width = `${newWidth}px`;
+            };
+
+            const handleMouseUp = () => {
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+                document.removeEventListener('touchmove', handleMouseMove);
+                document.removeEventListener('touchend', handleMouseUp);
+            };
+
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            document.addEventListener('touchmove', handleMouseMove);
+            document.addEventListener('touchend', handleMouseUp);
+        }
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Markdown to HTML</title>
+    <style>
+        pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #F00 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #04D } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #00F; font-weight: bold } /* Name.Class */
+.highlight .no { color: #800 } /* Name.Constant */
+.highlight .nd { color: #A2F } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #00F } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #BBB } /* Text.Whitespace */
+.highlight .mb { color: #666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666 } /* Literal.Number.Float */
+.highlight .mh { color: #666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #00F } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666 } /* Literal.Number.Integer.Long */
+        body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
+        pre { background-color: #f5f5f5; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        code { font-family: monospace; }
+        .math { font-size: 1.1em; }
+    </style>
+    
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['$', '$'], ['\(', '\)']],
+        displayMath: [['$$', '$$'], ['\[', '\]']],
+        processEscapes: true,
+        processEnvironments: true
+    },
+    options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+    },
+    startup: {
+        ready: () => {
+            MathJax.startup.defaultReady();
+            MathJax.startup.promise.then(() => {
+                console.log('MathJax is configured and ready');
+            });
+        }
+    }
+};
+</script>
+
+</head>
+<body>
+<h3>Objective Function</h3>
+
+<p>Let $x_{(l,k,j)} $  be the number of tickets sold for OD pair  $ l $ , departure time  $ k $ , and ticket type  $ j $  (where  $ j = f $  for Eco_flex,  $ j = l $  for Eco_lite). Let  $ x_o[l] $  be the number of outside option passengers for OD  $ l$.</p>
+
+<p>The objective is to maximize total revenue:</p>
+
+<p>$$
+\max \quad \sum_{(l,k,j)} \text{avg_price}[(l,k,j)] \cdot x_{(l,k,j)}
+$$</p>
+
+<p>where the sum is over all ticket options for the specified flights.</p>
+
+<h3>Constraints</h3>
+
+<h4>1. Capacity Constraints</h4>
+
+<p>For each flight (OD pair $l $ , departure time  $ k$), the total capacity consumed by ticket sales cannot exceed the flight capacity:</p>
+
+<p>$$
+2 \cdot x_{(l,k,f)} + 1 \cdot x_{(l,k,l)} \leq \text{flight_capacity}
+$$</p>
+
+<h4>2. Balance Constraints</h4>
+
+<p>For each OD pair $l$:</p>
+
+<p>$$
+\text{ratio_0_list}[l] \cdot x_o[l] + \sum_{k} \sum_{j} \text{ratio_list}[(l,k,j)] \cdot x_{(l,k,j)} = \text{avg_pax}[l]
+$$</p>
+
+<p>where the sum is over all flights and ticket types for OD $l$.</p>
+
+<h4>3. Scale Constraints</h4>
+
+<p>For each ticket option ((l,k,j)):</p>
+
+<p>$$
+\frac{x_{(l,k,j)}}{\text{value_list}[(l,k,j)]} - \frac{x_o[l]}{\text{value_0_list}[l]} \leq 0
+$$</p>
+
+<h4>4. Nonnegativity Constraints</h4>
+
+<p>$$
+x_{(l,k,j)} \geq 0, \quad x_o[l] \geq 0
+$$</p>
+
+<h3>Retrieved Information</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">avg_price</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;(AC,23:00,f)&#39;</span><span class="p">:</span> <span class="s1">&#39;1269.77&#39;</span><span class="p">,</span> <span class="s1">&#39;(AC,23:00,l)&#39;</span><span class="p">:</span> <span class="s1">&#39;485.58&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;(AC,19:05,f)&#39;</span><span class="p">:</span> <span class="s1">&#39;1285.64&#39;</span><span class="p">,</span> <span class="s1">&#39;(AC,19:05,l)&#39;</span><span class="p">:</span> <span class="s1">&#39;499.36&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,15:40,f)&#39;</span><span class="p">:</span> <span class="s1">&#39;1139.8&#39;</span><span class="p">,</span> <span class="s1">&#39;(BA,15:40,l)&#39;</span><span class="p">:</span> <span class="s1">&#39;441.86&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,18:50,f)&#39;</span><span class="p">:</span> <span class="s1">&#39;1138.59&#39;</span><span class="p">,</span> <span class="s1">&#39;(BA,18:50,l)&#39;</span><span class="p">:</span> <span class="s1">&#39;429.78&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,16:55,f)&#39;</span><span class="p">:</span> <span class="s1">&#39;1285.73&#39;</span><span class="p">,</span> <span class="s1">&#39;(CA,16:55,l)&#39;</span><span class="p">:</span> <span class="s1">&#39;527.21&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,09:05,f)&#39;</span><span class="p">:</span> <span class="s1">&#39;1123.69&#39;</span><span class="p">,</span> <span class="s1">&#39;(BA,09:05,l)&#39;</span><span class="p">:</span> <span class="s1">&#39;419.78&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,07:40,f)&#39;</span><span class="p">:</span> <span class="s1">&#39;1285.82&#39;</span><span class="p">,</span> <span class="s1">&#39;(CA,07:40,l)&#39;</span><span class="p">:</span> <span class="s1">&#39;558.55&#39;</span>
+<span class="p">}</span>
+<span class="n">value_list</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;(AC,23:00,f)&#39;</span><span class="p">:</span> <span class="mf">1.947126283</span><span class="p">,</span> <span class="s1">&#39;(AC,23:00,l)&#39;</span><span class="p">:</span> <span class="mf">0.574427934</span><span class="p">,</span>
+    <span class="s1">&#39;(AC,19:05,f)&#39;</span><span class="p">:</span> <span class="mf">2.329088053</span><span class="p">,</span> <span class="s1">&#39;(AC,19:05,l)&#39;</span><span class="p">:</span> <span class="mf">0.476091969</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,15:40,f)&#39;</span><span class="p">:</span> <span class="mf">0.897742508</span><span class="p">,</span> <span class="s1">&#39;(BA,15:40,l)&#39;</span><span class="p">:</span> <span class="mf">0.506369319</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,18:50,f)&#39;</span><span class="p">:</span> <span class="mf">1.788650781</span><span class="p">,</span> <span class="s1">&#39;(BA,18:50,l)&#39;</span><span class="p">:</span> <span class="mf">0.756699229</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,16:55,f)&#39;</span><span class="p">:</span> <span class="mf">1.329173046</span><span class="p">,</span> <span class="s1">&#39;(CA,16:55,l)&#39;</span><span class="p">:</span> <span class="mf">0.769156234</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,09:05,f)&#39;</span><span class="p">:</span> <span class="mf">2.600413693</span><span class="p">,</span> <span class="s1">&#39;(BA,09:05,l)&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,07:40,f)&#39;</span><span class="p">:</span> <span class="mf">0.865902564</span><span class="p">,</span> <span class="s1">&#39;(CA,07:40,l)&#39;</span><span class="p">:</span> <span class="mf">0.666898117</span>
+<span class="p">}</span>
+<span class="n">ratio_list</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;(AC,23:00,f)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;(AC,23:00,l)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s1">&#39;(AC,19:05,f)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;(AC,19:05,l)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,15:40,f)&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.932359218</span><span class="p">,</span> <span class="s1">&#39;(BA,15:40,l)&#39;</span><span class="p">:</span> <span class="mf">22.58777776</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,18:50,f)&#39;</span><span class="p">:</span> <span class="mf">8.734367009</span><span class="p">,</span> <span class="s1">&#39;(BA,18:50,l)&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">161.8249472</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,16:55,f)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;(CA,16:55,l)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,09:05,f)&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">9.210371325</span><span class="p">,</span> <span class="s1">&#39;(BA,09:05,l)&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">3.045572418</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,07:40,f)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;(CA,07:40,l)&#39;</span><span class="p">:</span> <span class="mf">1.0</span>
+<span class="p">}</span>
+<span class="n">value_0_list</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;AC&#39;</span><span class="p">:</span> <span class="mf">0.024033093</span><span class="p">,</span> <span class="s1">&#39;BA&#39;</span><span class="p">:</span> <span class="mf">0.133469692</span><span class="p">,</span> <span class="s1">&#39;CA&#39;</span><span class="p">:</span> <span class="mf">0.126816434</span><span class="p">}</span>
+<span class="n">ratio_0_list</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;AC&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;BA&#39;</span><span class="p">:</span> <span class="mf">0.012916147</span><span class="p">,</span> <span class="s1">&#39;CA&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+<span class="n">avg_pax</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;CA&#39;</span><span class="p">:</span> <span class="s1">&#39;4807.43&#39;</span><span class="p">,</span> <span class="s1">&#39;BA&#39;</span><span class="p">:</span> <span class="s1">&#39;33210.71&#39;</span><span class="p">,</span> <span class="s1">&#39;AC&#39;</span><span class="p">:</span> <span class="s1">&#39;4812.5&#39;</span><span class="p">}</span>
+<span class="n">flight_capacity</span> <span class="o">=</span> <span class="mi">187</span>
+</code></pre>
+</div>
+
+<h3>Generated Code</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">gurobipy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gurobipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRB</span>
+
+<span class="n">avg_price</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;(AC,23:00,f)&#39;</span><span class="p">:</span> <span class="mf">1269.77</span><span class="p">,</span> <span class="s1">&#39;(AC,23:00,l)&#39;</span><span class="p">:</span> <span class="mf">485.58</span><span class="p">,</span>
+    <span class="s1">&#39;(AC,19:05,f)&#39;</span><span class="p">:</span> <span class="mf">1285.64</span><span class="p">,</span> <span class="s1">&#39;(AC,19:05,l)&#39;</span><span class="p">:</span> <span class="mf">499.36</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,15:40,f)&#39;</span><span class="p">:</span> <span class="mf">1139.8</span><span class="p">,</span> <span class="s1">&#39;(BA,15:40,l)&#39;</span><span class="p">:</span> <span class="mf">441.86</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,18:50,f)&#39;</span><span class="p">:</span> <span class="mf">1138.59</span><span class="p">,</span> <span class="s1">&#39;(BA,18:50,l)&#39;</span><span class="p">:</span> <span class="mf">429.78</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,16:55,f)&#39;</span><span class="p">:</span> <span class="mf">1285.73</span><span class="p">,</span> <span class="s1">&#39;(CA,16:55,l)&#39;</span><span class="p">:</span> <span class="mf">527.21</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,09:05,f)&#39;</span><span class="p">:</span> <span class="mf">1123.69</span><span class="p">,</span> <span class="s1">&#39;(BA,09:05,l)&#39;</span><span class="p">:</span> <span class="mf">419.78</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,07:40,f)&#39;</span><span class="p">:</span> <span class="mf">1285.82</span><span class="p">,</span> <span class="s1">&#39;(CA,07:40,l)&#39;</span><span class="p">:</span> <span class="mf">558.55</span>
+<span class="p">}</span>
+<span class="n">value_list</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;(AC,23:00,f)&#39;</span><span class="p">:</span> <span class="mf">1.947126283</span><span class="p">,</span> <span class="s1">&#39;(AC,23:00,l)&#39;</span><span class="p">:</span> <span class="mf">0.574427934</span><span class="p">,</span>
+    <span class="s1">&#39;(AC,19:05,f)&#39;</span><span class="p">:</span> <span class="mf">2.329088053</span><span class="p">,</span> <span class="s1">&#39;(AC,19:05,l)&#39;</span><span class="p">:</span> <span class="mf">0.476091969</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,15:40,f)&#39;</span><span class="p">:</span> <span class="mf">0.897742508</span><span class="p">,</span> <span class="s1">&#39;(BA,15:40,l)&#39;</span><span class="p">:</span> <span class="mf">0.506369319</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,18:50,f)&#39;</span><span class="p">:</span> <span class="mf">1.788650781</span><span class="p">,</span> <span class="s1">&#39;(BA,18:50,l)&#39;</span><span class="p">:</span> <span class="mf">0.756699229</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,16:55,f)&#39;</span><span class="p">:</span> <span class="mf">1.329173046</span><span class="p">,</span> <span class="s1">&#39;(CA,16:55,l)&#39;</span><span class="p">:</span> <span class="mf">0.769156234</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,09:05,f)&#39;</span><span class="p">:</span> <span class="mf">2.600413693</span><span class="p">,</span> <span class="s1">&#39;(BA,09:05,l)&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,07:40,f)&#39;</span><span class="p">:</span> <span class="mf">0.865902564</span><span class="p">,</span> <span class="s1">&#39;(CA,07:40,l)&#39;</span><span class="p">:</span> <span class="mf">0.666898117</span>
+<span class="p">}</span>
+<span class="n">ratio_list</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;(AC,23:00,f)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;(AC,23:00,l)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s1">&#39;(AC,19:05,f)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;(AC,19:05,l)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,15:40,f)&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.932359218</span><span class="p">,</span> <span class="s1">&#39;(BA,15:40,l)&#39;</span><span class="p">:</span> <span class="mf">22.58777776</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,18:50,f)&#39;</span><span class="p">:</span> <span class="mf">8.734367009</span><span class="p">,</span> <span class="s1">&#39;(BA,18:50,l)&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">161.8249472</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,16:55,f)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;(CA,16:55,l)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s1">&#39;(BA,09:05,f)&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">9.210371325</span><span class="p">,</span> <span class="s1">&#39;(BA,09:05,l)&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">3.045572418</span><span class="p">,</span>
+    <span class="s1">&#39;(CA,07:40,f)&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;(CA,07:40,l)&#39;</span><span class="p">:</span> <span class="mf">1.0</span>
+<span class="p">}</span>
+<span class="n">value_0_list</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;AC&#39;</span><span class="p">:</span> <span class="mf">0.024033093</span><span class="p">,</span> <span class="s1">&#39;BA&#39;</span><span class="p">:</span> <span class="mf">0.133469692</span><span class="p">,</span> <span class="s1">&#39;CA&#39;</span><span class="p">:</span> <span class="mf">0.126816434</span><span class="p">}</span>
+<span class="n">ratio_0_list</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;AC&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;BA&#39;</span><span class="p">:</span> <span class="mf">0.012916147</span><span class="p">,</span> <span class="s1">&#39;CA&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+<span class="n">avg_pax</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;CA&#39;</span><span class="p">:</span> <span class="mf">4807.43</span><span class="p">,</span> <span class="s1">&#39;BA&#39;</span><span class="p">:</span> <span class="mf">33210.71</span><span class="p">,</span> <span class="s1">&#39;AC&#39;</span><span class="p">:</span> <span class="mf">4812.5</span><span class="p">}</span>
+<span class="n">flight_capacity</span> <span class="o">=</span> <span class="mi">187</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;sales_based_lp&quot;</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">addVars</span><span class="p">(</span><span class="n">avg_price</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">x_o</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">addVars</span><span class="p">(</span><span class="n">value_0_list</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x_o&quot;</span><span class="p">)</span>
+
+<span class="c1"># Objective</span>
+<span class="n">model</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">gp</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span><span class="n">avg_price</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">avg_price</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">GRB</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+
+<span class="c1"># Capacity constraints</span>
+<span class="n">flight_pairs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;AC&#39;</span><span class="p">,</span> <span class="s1">&#39;23:00&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;AC&#39;</span><span class="p">,</span> <span class="s1">&#39;19:05&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;BA&#39;</span><span class="p">,</span> <span class="s1">&#39;15:40&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;BA&#39;</span><span class="p">,</span> <span class="s1">&#39;18:50&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;BA&#39;</span><span class="p">,</span> <span class="s1">&#39;09:05&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;CA&#39;</span><span class="p">,</span> <span class="s1">&#39;16:55&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;CA&#39;</span><span class="p">,</span> <span class="s1">&#39;07:40&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">flight_pairs</span><span class="p">:</span>
+    <span class="n">key_f</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">,f)&#39;</span>
+    <span class="n">key_l</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">,l)&#39;</span>
+    <span class="k">if</span> <span class="n">key_f</span> <span class="ow">in</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">key_l</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">addConstr</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">key_f</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">key_l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">flight_capacity</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;capacity_</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Balance constraints</span>
+<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ratio_0_list</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">LinExpr</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ratio_list</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s1">,&#39;</span><span class="p">):</span>
+            <span class="n">temp</span> <span class="o">+=</span> <span class="n">ratio_list</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">addConstr</span><span class="p">(</span><span class="n">ratio_0_list</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">*</span> <span class="n">x_o</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">+</span> <span class="n">temp</span> <span class="o">==</span> <span class="n">avg_pax</span><span class="p">[</span><span class="n">l</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;balance_</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Scale constraints</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">value_list</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># e.g., &#39;AC&#39;</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">od</span> <span class="ow">in</span> <span class="n">value_0_list</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">od</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">addConstr</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">/</span> <span class="n">value_list</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_o</span><span class="p">[</span><span class="n">od</span><span class="p">]</span> <span class="o">/</span> <span class="n">value_0_list</span><span class="p">[</span><span class="n">od</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;scale_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">GRB</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal solution found:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">getVars</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">varName</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal objective value:&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">objVal</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No optimal solution found.&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<hr />
+
+<p><strong>Note:</strong>  </p>
+
+<ul>
+<li>The variables $x_{(l,k,j)}$ correspond to each ticket type for each specified flight.</li>
+<li>The capacity constraint uses 2 units for Eco_flex and 1 unit for Eco_lite, as specified.</li>
+<li>All required parameters are included above.</li>
+<li>The code is ready to run with Gurobi and will solve the SBLP for the specified flights and constraints.</li>
+</ul>
+
+</body>
+</html>
