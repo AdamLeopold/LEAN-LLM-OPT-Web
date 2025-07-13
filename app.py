@@ -1237,6 +1237,8 @@ def get_others_without_CSV_response(query,api_key):
 
     few_shot_examples = []
     similar_results = retrieve_similar_docs(query, retriever)
+    print('-'*50,'similar_results','-'*50)
+    print(similar_results)
 
     for i, result in enumerate(similar_results, 1):
         content = result['content']
@@ -1274,6 +1276,8 @@ Final Answer:
 {label}
 
             """)
+        print('-'*50,'few shot example','-'*50)
+        print(few_shot_examples)
 
     # Create the prefix and suffix for the agent's prompt
     prefix = f"""You are a helpful assistant that can answer Querys about operation problems. 
