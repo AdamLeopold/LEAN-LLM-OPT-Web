@@ -1254,7 +1254,7 @@ def get_others_without_CSV_response(query,api_key):
         Related = split_at_type[0].strip()
 
         selected_problem = split_at_type[1].strip()
-
+        problem_description=problem_description.replace("{", "{{").replace("}", "}}")
         label = label.replace("{", "{{").replace("}", "}}")
         few_shot_examples.append(f"""
 
