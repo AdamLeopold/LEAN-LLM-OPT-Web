@@ -1,0 +1,7 @@
+Time,Minimum Number of Waitstaff
+2am - 6am,4
+6am - 10am,8
+10am - 2pm,10
+2pm - 6pm,4
+6pm - 10pm,8
+10pm - 2am,4

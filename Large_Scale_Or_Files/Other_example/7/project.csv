@@ -1,0 +1,6 @@
+project,profit,R1 Dosage/unit,R2 Dosage/unit,R3 Dosage/unit,demand
+P1,50,2,3,1,100
+P2,60,4,1,2,80
+P3,40,1,2,3,60
+P4,30,3,2,2,50
+P5,20,2,1,1,40

@@ -1,0 +1,320 @@
+prompt,Data_address,Label,Related
+"In the Superstore chain, multiple branches require inventory replenishment, and several suppliers located in different cities can provide the necessary goods. Each supplier incurs a fixed cost upon starting operations, with the fixed cost data provided in the 'fixed_costs.csv' file. Each branch needs to source a certain quantity of goods from these suppliers. For each branch, the transportation cost per unit of goods from each supplier is recorded in the 'transportation_costs.csv' file. Demand information can be gained in 'demand.csv'. The objective is to determine which suppliers to activate so that the demand of all branches is met while minimizing the total cost.","Large_Scale_Or_Files/UFLP_example/demand.csv
+Large_Scale_Or_Files/UFLP_example/fixed_cost.csv
+Large_Scale_Or_Files/UFLP_example/transportation_costs.csv","
+##### Objective Function: 
+
+$\quad \quad \min \sum_{i} \sum_{j} A_{ij} x_{ij} + \sum_{j} c_j y_j $
+
+##### Constraints
+
+###### 1. Demand Constraints: 
+
+$\quad \quad \sum_i x_{ij} = d_j, \quad \forall j$
+
+###### 2. M Constraints: 
+
+$\quad \quad \sum_i x_{ij} \leq M y_j, \quad \forall j$
+
+###### 3. Variable Constraints: 
+
+$ y_j \in \{{0,1\\}, \quad \forall j$
+
+$ x_{ij} \geq 0, \forall i,j $
+###### Retrieved Information
+
+$d = [7564, 5246]$
+$c = [105.1815083, 112.18423885]$
+$M = \sum_j d_j = 7564 + 5246 = 12810$
+$ A = \\begin{bmatrix}
+937.34065048 & 86.93019411 \\
+49.38016148 & 1726.06210136
+\\end{bmatrix}$
+",
+"A retail company wants to decide where to open warehouses to minimize total costs while meeting the demands of several stores in a region. Each potential warehouse has an opening cost, and there is a known transportation cost for supplying goods to each store from each warehouse. Each warehouse has a capacity, and each store has a specific demand. The potential warehouses costs are in PotentialWarehouses_Costs.csv, demand for each store is in Stores_Demands.csv and the transportation costs c_ij from warehouse i to store j is in TransportationCost.csv
+
+You are to determine which warehouses to open and how to assign the demand of each store to the warehouses such that all store demands are met, warehouse capacities are not exceeded, and the total cost (opening + transportation) is minimized.","Large_Scale_Or_Files/Other_example/15/PotentialWarehouses_Costs.csv
+Large_Scale_Or_Files/Other_example/15/Stores_Demands.csv
+Large_Scale_Or_Files/Other_example/15/TransportationCost.csv","### Facility Location LP Formulation
+
+**Variables:**
+- $x_{i,j}$: Number of units supplied from warehouse $i$ to store $j$ (continuous, $\geq 0$)
+- $y_{i}$: $1$ if warehouse $i$ is opened, $0$ otherwise (binary)
+
+---
+
+**Objective (Minimize total cost):**
+
+$$
+\text{Minimize}\ Z =\ 3000y_1 + 3200y_2 + 3100y_3 + 2800y_4 + 3500y_5 + 2700y_6 + 2900y_7 + 3050y_8 \\
++ (12x_{1,1} + 17x_{1,2} + 13x_{1,3} + 18x_{1,4} + 10x_{1,5} + 15x_{1,6} + 14x_{1,7} + 19x_{1,8}) \\
++ (11x_{2,1} + 19x_{2,2} + 14x_{2,3} + 16x_{2,4} + 13x_{2,5} + 12x_{2,6} + 13x_{2,7} + 16x_{2,8}) \\
++ (14x_{3,1} + 15x_{3,2} + 12x_{3,3} + 17x_{3,4} + 12x_{3,5} + 14x_{3,6} + 15x_{3,7} + 18x_{3,8}) \\
++ (15x_{4,1} + 20x_{4,2} + 14x_{4,3} + 13x_{4,4} + 19x_{4,5} + 16x_{4,6} + 17x_{4,7} + 20x_{4,8}) \\
++ (17x_{5,1} + 18x_{5,2} + 16x_{5,3} + 18x_{5,4} + 15x_{5,5} + 13x_{5,6} + 12x_{5,7} + 17x_{5,8}) \\
++ (13x_{6,1} + 14x_{6,2} + 15x_{6,3} + 17x_{6,4} + 11x_{6,5} + 17x_{6,6} + 13x_{6,7} + 19x_{6,8}) \\
++ (12x_{7,1} + 17x_{7,2} + 11x_{7,3} + 14x_{7,4} + 12x_{7,5} + 16x_{7,6} + 14x_{7,7} + 16x_{7,8}) \\
++ (16x_{8,1} + 15x_{8,2} + 14x_{8,3} + 19x_{8,4} + 14x_{8,5} + 16x_{8,6} + 15x_{8,7} + 18x_{8,8})
+$$
+
+---
+
+**Subject to:**
+
+**Store demand constraints (for each store $j = 1, \ldots, 8$):**
+$$
+\sum_{i=1}^{8} x_{i, j} = d_j
+$$
+where
+$$
+% d_1 = 30 \\
+% d_2 = 40 \\
+% d_3 = 20 \\
+% d_4 = 35 \\
+% d_5 = 20 \\
+% d_6 = 25 \\
+% d_7 = 45 \\
+% d_8 = 38
+d = [30,40,20,35,20,25,45,38]
+$$
+
+**Warehouse capacity constraints (for each warehouse $i = 1, \ldots, 8$):**
+$$
+\sum_{j=1}^{8} x_{i, j} \leq c_i y_i
+$$
+where
+$$
+% c_1 = 180 \\
+% c_2 = 160 \\
+% c_3 = 200 \\
+% c_4 = 150 \\
+% c_5 = 170 \\
+% c_6 = 190 \\
+% c_7 = 160 \\
+% c_8 = 175
+c = [180,160,200,150,170,190,160,175]
+$$
+
+**Domain:**
+$$
+x_{i,j} \geq 0 \quad \text{for all } i, j \\
+y_i \in \{0,1\} \quad \text{for all } i
+$$",
+"A convenience store plans to open several chain stores in a new residential area in the northwest suburbs of the city. To facilitate shopping, the distance from any residential area to one of the chain stores should not exceed $800 \mathrm{~m}$. 5.csv gives the newly built residential areas and the various areas within a radius of $800 \mathrm{~m}$ of each residential area. How many chain stores should the supermarket build in the above-mentioned areas and in which areas should they be built?",Large_Scale_Or_Files/Other_example/5.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+y_A + y_B + y_C + y_D + y_E + y_F + y_G + y_H + y_I + y_J + y_K + y_L
+$$
+
+**subject to**
+
+$$
+y_A + y_C + y_E + y_G + y_H + y_I \geq 1 \quad (\text{cover A})
+$$
+
+$$
+y_B + y_H + y_I \geq 1 \quad (\text{cover B})
+$$
+
+$$
+y_A + y_C + y_G + y_H + y_I \geq 1 \quad (\text{cover C})
+$$
+
+$$
+y_D + y_J \geq 1 \quad (\text{cover D})
+$$
+
+$$
+y_A + y_E + y_G \geq 1 \quad (\text{cover E})
+$$
+
+$$
+y_F + y_J + y_K \geq 1 \quad (\text{cover F})
+$$
+
+$$
+y_A + y_C + y_E + y_G \geq 1 \quad (\text{cover G})
+$$
+
+$$
+y_A + y_B + y_C + y_H + y_I \geq 1 \quad (\text{cover H})
+$$
+
+$$
+y_A + y_B + y_C + y_H + y_I \geq 1 \quad (\text{cover I})
+$$
+
+$$
+y_D + y_F + y_J + y_K + y_L \geq 1 \quad (\text{cover J})
+$$
+
+$$
+y_F + y_J + y_K + y_L \geq 1 \quad (\text{cover K})
+$$
+
+$$
+y_J + y_K + y_L \geq 1 \quad (\text{cover L})
+$$
+
+**where**
+
+$$
+y_i \in \{0,1\}, \quad i \in \{A, B, C, D, E, F, G, H, I, J, K, L\}
+$$",
+"A company plans to open a number of new warehouses to serve a group of customers. The decision maker is faced with the challenge of balancing the fixed costs of opening the warehouses with the variable costs of transporting goods from the warehouses to the customers. Each potential warehouse location has a fixed annual operating cost and a maximum service capacity. All customers' needs must be met . The needs about the customer are in table demand.csv and the transport costs are in table cost.csv. Currently there are two potential warehouses to choose from, Warehouse W1 has a fixed annual cost of $2,000,000 and a capacity of 1,000.Warehouse W2 has a fixed annual cost of $2,500,000 and a capacity of 1,500.The company's objective is to minimise costs while meeting the needs of its customers.","Large_Scale_Or_Files/Other_example/2/cost.csv
+Large_Scale_Or_Files/Other_example/2/demand.csv","**Objective Function:** 
+\[
+\min Z = 2\,000\,000\,y_{W1} +\; 2\,500\,000\,y_{W2}
++\bigl(10x_{C1,W1} + 15x_{C2,W1} + 20x_{C3,W1}
++ 18x_{C1,W2} + 12x_{C2,W2} + 9x_{C3,W2}\bigr)
+\]
+
+**Constraints:** 
+\[
+x_{C1,W1} + x_{C1,W2} = 800
+\]
+\[
+x_{C2,W1} + x_{C2,W2} = 600
+\]
+\[
+x_{C3,W1} + x_{C3,W2} = 500
+\]
+\[
+x_{C1,W1} + x_{C2,W1} + x_{C3,W1} \le 1000\,y_{W1}
+\]
+\[
+x_{C1,W2} + x_{C2,W2} + x_{C3,W2} \le 1500\,y_{W2}
+\]
+
+**Decision Variables:** 
+\[
+y_j \in \{0,1\}, \quad j \in \{W1, W2\}
+\]
+\[
+x_{ij} \ge 0, \quad i \in \{C1, C2, C3\}, j \in \{W1, W2\}
+\]",
+"There are 3 candidate plants F1, F2, and F3, which can be built or not, and 3 customers C1, C2, and C3, which have fixed demand and need to be distributed by the built plants. The unit transport cost per factory-customer distribution and the fixed construction cost of the factories are shown in cost.csv, and the customer demand is shown in demand.csv. How should the factories be built to minimise the cost while meeting the customer demand?","Large_Scale_Or_Files/Other_example/3/cost.csv
+Large_Scale_Or_Files/Other_example/3/demand.csv","**Objective Function:** 
+\[
+\min Z = 10\,000\,y_{1} + 12\,000\,y_{2} + 15\,000\,y_{3}
++c_{11}x_{11} + c_{12}x_{12} + c_{13}x_{13}
++ c_{21}x_{21} + c_{22}x_{22} + c_{23}x_{23}
++ c_{31}x_{31} + c_{32}x_{32} + c_{33}x_{33}
+\]
+
+**Constraints:** 
+Demand requirements: 
+\[
+x_{11} + x_{12} + x_{13} = 80
+\]
+\[
+x_{21} + x_{22} + x_{23} = 100
+\]
+\[
+x_{31} + x_{32} + x_{33} = 60
+\]
+
+Capacity constraints for facility 1: 
+\[
+x_{11} + x_{21} + x_{31} \le 150\,y_{1}
+\]
+\[
+x_{12} + x_{22} + x_{32} \le 150\,y_{1}
+\]
+\[
+x_{13} + x_{23} + x_{33} \le 150\,y_{1}
+\]
+
+Capacity constraints for facility 2: 
+\[
+x_{11} + x_{21} + x_{31} \le 200\,y_{2}
+\]
+\[
+x_{12} + x_{22} + x_{32} \le 200\,y_{2}
+\]
+\[
+x_{13} + x_{23} + x_{33} \le 200\,y_{2}
+\]
+
+Capacity constraints for facility 3: 
+\[
+x_{11} + x_{21} + x_{31} \le 180\,y_{3}
+\]
+\[
+x_{12} + x_{22} + x_{32} \le 180\,y_{3}
+\]
+\[
+x_{13} + x_{23} + x_{33} \le 180\,y_{3}
+\]
+
+**Decision Variables:** 
+\[
+x_{ij} \ge 0,\quad \forall i,j
+\]
+\[
+y_{j} \in \{0,1\},\quad j = 1,2,3
+\]",
+"Service centres need to be opened at four customer locations 1,2,3,4. Each centre has a fixed cost, and the cost of serving customers varies from centre to centre. The exact cost is shown in cost.csv. It is necessary to minimise the total cost while satisfying that all customers are served.",Large_Scale_Or_Files/Other_example/5/cost.csv,"**Objective Function:** 
+\[
+\min Z = 20\,000\,y_{1} + 30\,000\,y_{2} +25\,000\,y_{3}
++ \sum_{i=1}^{3}\sum_{j=1}^{4} c_{ij}\,x_{ij}
+\]
+
+**Assignment Constraints:** 
+\[
+x_{11} + x_{21} + x_{31} = 1
+\] 
+\[
+x_{12} + x_{22} + x_{32} = 1
+\] 
+\[
+x_{13} + x_{23} + x_{33} = 1
+\] 
+\[
+x_{14} + x_{24} + x_{34} = 1
+\]
+
+**Linking Constraints:** 
+\[
+x_{ij} \le y_{i}
+\quad \forall\,i=1,2,3,j=1,2,3,4
+\]
+
+**Decision Variables:** 
+\[
+y_{i} \in \{0,1\}, \quad i=1,2,3
+\] 
+\[
+x_{ij} \in \{0,1\}, \quad i=1,2,3,j=1,2,3,4
+\]",
+"ElectroTech Manufacturing seeks to optimize its supply chain network. The company currently operates one factory at A1 and considers expanding to locations A2-A5, with parameters defined in facility_costs.csv. Distribution centers B1-B3 have fixed demands (demand_requirements.csv), and shipping costs between facilities are specified in shipping_costs.csv. The goal is to determine where to build new factories and how to route shipments to minimize total costs while meeting all demand.","Large_Scale_Or_Files/Other_example/model8/facility_costs.csv
+Large_Scale_Or_Files/Other_example/model8/shipping_costs.csv
+Large_Scale_Or_Files/Other_example/model8/demand_requirements.csv","#### Decision Variables
+- $y_k \in \{0,1\}$: 1 if factory built at $k \in \{A2,A3,A4,A5\}$, else 0
+- $x_{ij} \geq 0$: Units shipped from $i \in \{A1,A2,A3,A4,A5\}$ to $j \in \{B1,B2,B3\}$
+
+#### Objective Function
+$\min \ 175y_{A2} + 300y_{A3} + 375y_{A4} + 500y_{A5} +$
+$\quad \quad 8x_{A1B1} + 4x_{A1B2} + 3x_{A1B3} +$
+$\quad \quad 5x_{A2B1} + 2x_{A2B2} + 3x_{A2B3} +$
+$\quad \quad 4x_{A3B1} + 3x_{A3B2} + 4x_{A3B3} +$
+$\quad \quad 9x_{A4B1} + 7x_{A4B2} + 5x_{A4B3} +$
+$\quad \quad 10x_{A5B1} + 4x_{A5B2} + 2x_{A5B3}$
+
+#### Constraints
+**1. Production Capacity** 
+$\quad \quad \sum_{j} x_{A1j} \leq 30$ 
+$\quad \quad \sum_{j} x_{A2j} \leq 10y_{A2}$ 
+$\quad \quad \sum_{j} x_{A3j} \leq 20y_{A3}$ 
+$\quad \quad \sum_{j} x_{A4j} \leq 30y_{A4}$ 
+$\quad \quad \sum_{j} x_{A5j} \leq 40y_{A5}$ 
+
+**2. Demand Satisfaction** 
+$\quad \quad \sum_{i} x_{iB1} = 30$ 
+$\quad \quad \sum_{i} x_{iB2} = 20$ 
+$\quad \quad \sum_{i} x_{iB3} = 20$ 
+
+**3. Integrality** 
+$\quad \quad x_{ij} \geq 0, \quad y_k \in \{0,1\}$",

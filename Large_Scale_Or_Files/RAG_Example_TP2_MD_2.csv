@@ -1,0 +1,181 @@
+prompt,Data_address,Label,Related
+"Walmart stores play a critical role in supplying essential goods to various customer groups on a daily basis. The problem involves determining the optimal transportation plan that satisfies the demands of 4 customer groups, whose daily demand data is provided in ""customer_demands.csv"". These demands must be met using supplies from 3 Walmart stores, each with a specific daily supply capacity detailed in ""supply_capacity.csv"". The transportation cost per unit of goods from each Walmart store to each customer group is recorded in ""transportation_costs.csv"". The objective is to determine the quantity of goods transported from each Walmart store to each customer group, ensuring that all demands are met without exceeding the supply capacity of any store, while minimizing the total transportation cost.","Large_Scale_Or_Files/TP_example/customer_demand.csv
+Large_Scale_Or_Files/TP_example/supply_capacity.csv
+Large_Scale_Or_Files/TP_example/transportation_costs.csv
+","
+##### Objective Function: 
+
+$\quad \quad \min \sum_i \sum_j c_{ij} \cdot x_{ij}$
+
+##### Constraints
+
+###### 1. Demand Constraints: 
+
+$\quad \quad \sum_i x_{ij} \geq d_j, \quad \forall j$
+
+###### 2. Capacity Constraints: 
+
+$\quad \quad  \sum_j x_{ij} \leq s_i, \quad \forall i$
+
+###### Retrieved Information
+```python
+$d = [11, 1148, 54, 833]$
+$s = [4, 575, 1504]$
+$ c = \\begin{bmatrix}
+0.63 & 49.71 & 33.75 & 1570.67 \\
+605.47 & 64.53 & 478.47 & 887.04 \\
+1139.04 & 4.78 & 1805.62 & 1302.89
+\\end{bmatrix}$
+```
+",
+"Educational planners must be able to address the travel-time issue, while striving to satisfy other requirements. One approach to the problem is to consider racial balance, school capacity, and population of the school district as constraints, while striving to transport the children with as little inconvenience to them as possible . Suppose the Capital City School District has two elementary schools, with individual capacities in school_capacity.csv,there are three neighborhoods with the elementary school populations as summarized in neighborhoods_population.csv and the distance in miles from school to neighborhoods is in distance.csv. The district has decided to integrate by school rather than by grade level. A school will be considered to be in racial balance when it deviates by no more than 10 percent from the district ratio of 60 percent white and 40 percent nonwhite . The district wishes to devise a busing plan that will transport pupils to any school in the same racial ratio as their neighborhood and will minimize the distance the youngsters must travel.","Large_Scale_Or_Files/Other_example/11/school_capacity.csv
+Large_Scale_Or_Files/Other_example/11/neighborhoods_population.csv
+Large_Scale_Or_Files/Other_example/11/distance.csv","## School Assignment Linear Programming Formulation
+
+### Sets and Indices
+- $i = 1,2$: School index ($1=$ School I, $2=$ School II)
+- $j = 1,2,3$: Neighborhood index ($1=$ A, $2=$ B, $3=$ C)
+
+---
+
+### Decision Variables
+
+- $x_{ij}^w$: Number of white students assigned from neighborhood $j$ to school $i$
+- $x_{ij}^{nw}$: Number of nonwhite students assigned from neighborhood $j$ to school $i$
+
+---
+
+### Objective Function
+
+Minimize total transportation cost:
+$$
+\min \sum_{i=1}^2 \sum_{j=1}^3 d_{ij} \cdot \left( x_{ij}^w + x_{ij}^{nw} \right)
+$$
+
+---
+
+### Constraints
+
+**1. Assignment Constraints (All students from each neighborhood must be assigned):**
+For each neighborhood $j$,
+$$
+\sum_{i=1}^2 x_{ij}^w = P_j^w, \qquad \sum_{i=1}^2 x_{ij}^{nw} = P_j^{nw} \qquad \forall j = 1,2,3
+$$
+
+**2. School Capacity Constraints (Total assigned students to each school cannot exceed its capacity):**
+For each school $i$,
+$$
+\sum_{j=1}^3 (x_{ij}^w + x_{ij}^{nw}) \leq S_i \qquad \forall i = 1,2
+$$
+
+**3. Racial Balance Constraints (Each school's white and nonwhite ratio must be within 10% of the district ratio):**
+
+District ratio: 60% white, 40% nonwhite.
+
+For each school $i$,
+$$
+0.5 \leq
+\frac{\sum_{j=1}^3 x_{ij}^w}{\sum_{j=1}^3 (x_{ij}^w + x_{ij}^{nw})}
+\leq 0.7 \qquad \forall i = 1,2
+$$
+
+**4. Nonnegativity:**
+$$
+x_{ij}^w \geq 0, \quad x_{ij}^{nw} \geq 0 \qquad \forall i = 1,2;\ j = 1,2,3
+$$
+
+---
+
+### Data
+
+**Neighborhood Populations**
+- $P_1^w = 240$_$P_1^{nw} = 80$__(Neighborhood A)
+- $P_2^w = 60$__$P_2^{nw} = 120$_(Neighborhood B)
+- $P_3^w = 180$_$P_3^{nw} = 120$_(Neighborhood C)
+
+**District Ratio** 
+- White: 60%, Nonwhite: 40%
+
+**School Capacities**
+- $S_1 = 600$_(School I)
+- $S_2 = 300$_(School II)
+
+**Distances $d_{ij}$ (in miles)**
+$$
+\mathbf{D} =
+\begin{bmatrix}
+2.4 & 1.8 & 1.5 \\
+1.6 & 4.0 & 0.0
+\end{bmatrix}
+$$
+Where the rows correspond to School I and II, and columns to Neighborhoods A, B, and C.",
+"A traveling salesman must visit 7 customers at 7 different locations, and the (symmetric) distance matrix is restored in 20.csv file.
+Develop a mathematical program to determine the visiting order starting from location 1 and ending at location 1, in order to minimize the traveling distance, and solve it using COPTPY.",Large_Scale_Or_Files/Other_example/20.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+\sum_{i=1}^7 \sum_{\substack{j=1 \\ j \neq i}}^7 d_{i,j} \, x_{i,j}
+$$
+
+**subject to**
+
+$$
+\sum_{\substack{j=1 \\ j \neq i}}^7 x_{i,j} = 1 
+\quad \text{for all } i = 1,\ldots,7 
+\quad (\text{leave each city once})
+$$
+
+$$
+\sum_{\substack{i=1 \\ i \neq j}}^7 x_{i,j} = 1 
+\quad \text{for all } j = 1,\ldots,7 
+\quad (\text{enter each city once})
+$$
+
+**MTZ subtour elimination constraints**
+
+$$
+u_i - u_j + 7\, x_{i,j} \leq 6 
+\quad \text{for all } i,j = 2,\ldots,7,\ i \neq j
+$$
+
+**where**
+
+$$
+x_{i,j} \in \{0,1\} 
+\quad \text{for all } i \neq j
+\quad (\text{binary, traveling from } i \text{ to } j)
+$$
+
+$$
+u_i \in [2,7]
+\quad \text{for } i = 2,\ldots,7
+\quad (\text{continuous MTZ ordering variables})
+$$",
+"There are 2 source locations (S1,S2) and 3 demand locations (D1-D3). Each truck is loaded with 10 units of cargo and can only be dispatched in whole trucks (integer trips).S1 can supply 100 units of cargo and S2 can supply 150 units of cargo.D1 needs 80 units of cargo, D2 needs 120 units of cargo and D3 needs 50 units of cargo. The cost.csv file provides the per-unit cargo's loading costs for each truck on different routes. The source of goods is constrained and the demand is fixed. Our goal is to meet all demands and minimize the total transportation cost, which is measured in units of each cargo.",Large_Scale_Or_Files/Other_example/9/cost.csv,"**Objective Function:** 
+\[
+\min Z = 10*(100x_{11} +120x_{12} +130x_{13}
++110x_{21} + 115x_{22} +105x_{23})
+\]
+
+**Constraints:** 
+\[
+10x_{11} + 10x_{21} = 80
+\] 
+\[
+10x_{12} + 10x_{22} = 120
+\] 
+\[
+10x_{13} + 10x_{23} = 50
+\] 
+\[
+10\bigl(x_{11} + x_{12} + x_{13}\bigr) \le 100
+\] 
+\[
+10\bigl(x_{21} + x_{22} + x_{23}\bigr) \le 150
+\]
+
+**Decision Variables:** 
+\[
+x_{ij} \in \mathbb{Z}, \quad i = 1,2, j = 1,2,3
+\]",

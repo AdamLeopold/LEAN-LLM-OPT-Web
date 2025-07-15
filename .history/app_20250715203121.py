@@ -195,8 +195,108 @@ def solve():
         return jsonify({'error': 'Missing required parameters'}), 400
         
     try:
-        result = process_problem_type(query, api_key, problem_type)
-        rendered_solution = markdown.markdown(result, extensions=["fenced_code", CodeHiliteExtension()])
+        # Process based on problem type
+        if query == 't':
+            result_nrm = '''
+$$
+
+\small
+\begin{align*}
+\max \quad & \sum_{i=1}^{n} R_i x_i \\
+\mathrm{s.t.} \quad & x_i \leq I_i, \quad \forall i \quad \text{(inventory constraint)} \\
+& x_i \leq D_i, \quad \forall i \quad \text{(demand constraint)} \\
+& x_i \in \mathbb{Z}_+, \quad \forall i \\
+\quad & \text{where,} \\
+& R = [1283.7,\, 321.11,\, 1003.56,\, 371.56,\, 641.22,\, 1316.82,\, 1088.57,\, 513.64,\, 956.78,\, 178.22,\, 467.93,\, 377.8,\, 805.82,\, 894.34,\, 1409.21,\, 348.43,\, 1211.35,\, 875.91,\, 153.61,\, 951.85,\, 867.3,\, 992.14,\, 728.62,\, 1237.37,\, 287.36,\, 178.52,\, 1068.1,\, 1196.95,\, 973.62,\, 498.77,\, 1269.71,\, 518.67,\, 701.97,\, 338.6,\, 167.99,\, 678.72,\, 549.92,\, 1030.8,\, 478.36,\, 1285.81,\, 1175.92,\, 1118.63,\, 156.02,\, 753.55,\, 256.42,\, 1136.87,\, 1279.24,\, 887.06,\, 479.44,\, 1318.33,\, 1479.23,\, 367.91,\, 462.26,\, 448.61,\, 971.93,\, 1183.94,\, 1064.72,\, 872.16,\, 245.81,\, 1134.19,\, 972.1,\, 483.26,\, 507.13,\, 965.34,\, 1184.54,\, 139.14,\, 1128.07,\, 169.7,\, 1042.66,\, 869.95,\, 1385.88] \\
+& I = [70,\, 500,\, 80,\, 30,\, 250,\, 690,\, 340,\, 510,\, 990,\, 440,\, 190,\, 240,\, 850,\, 900,\, 760,\, 440,\, 240,\, 40,\, 700,\, 300,\, 680,\, 880,\, 670,\, 270,\, 890,\, 580,\, 480,\, 850,\, 920,\, 170,\, 960,\, 800,\, 290,\, 790,\, 260,\, 600,\, 40,\, 170,\, 760,\, 820,\, 590,\, 50,\, 470,\, 830,\, 670,\, 170,\, 350,\, 600,\, 610,\, 360,\, 760,\, 680,\, 160,\, 620,\, 210,\, 150,\, 200,\, 360,\, 950,\, 470,\, 290,\, 570,\, 790,\, 890,\, 580,\, 310,\, 560,\, 880,\, 350,\, 830] \\
+& D = [9,\, 65,\, 10,\, 4,\, 31,\, 98,\, 48,\, 64,\, 125,\, 66,\, 28,\, 29,\, 112,\, 116,\, 102,\, 55,\, 32,\, 5,\, 100,\, 40,\, 101,\, 131,\, 97,\, 40,\, 121,\, 81,\, 60,\, 112,\, 138,\, 26,\, 130,\, 102,\, 43,\, 109,\, 33,\, 84,\, 6,\, 25,\, 102,\, 121,\, 76,\, 7,\, 59,\, 125,\, 96,\, 24,\, 52,\, 87,\, 78,\, 79,\, 54,\, 95,\, 90,\, 20,\, 90,\, 30,\, 21,\, 25,\, 45,\, 125,\, 62,\, 42,\, 80,\, 109,\, 132,\, 75,\, 43,\, 75,\, 110,\, 48,\, 122]
+\end{align*}
+
+$$'''
+
+            result_nrm = result_nrm.replace('\begin', '\\\\begin')\
+                        .replace('\end', '\\\\end')\
+                        .replace(' \\', ' \\\\\\\\\\\\\\\\')\
+                        .replace('\f', '\\f')\
+                        .replace('\text', '\\mathrm')\
+                        .replace(',\, ', ', ')\
+                        .replace('\\\\\\\\\\\\\\\quad', '\quad')\
+                        .replace('\\\\\\\\\\\\\\\sum', '\sum')\
+                        .replace('\\\\\\\\\\\\\\\leq', '\leq')\
+                        .replace('\\\\\\\\\\\\\\\in', '\in')\
+                        .replace('\\\\\\\\\\\\\\\mathbb', '\mathbb')\
+                        .replace(' $i$', '')\
+                        .replace('for each product', '')\
+                        .replace('\\forall', '\\\\forall').replace('$$\n','$$').replace('\n$$','$$')  # 这里是你要的替换
+
+            print(result_nrm)
+            result = '''
+This is a LaTeX expression:
+$$
+\small
+\\begin{align*}
+\max \quad &\sum_{i} A_i x_i \\\\\\\\
+\mathrm{s.t.} \quad & x_i \leq I_i, \quad \\forall i \quad \mathrm{(inventory ~ constraint)}\\\\\\\\
+\quad & x_i \leq d_i, \quad \\forall i \quad \mathrm{(demand ~ constraint)}\\\\\\\\
+\quad & \sum_i x_i \geq s, \quad \\forall i \quad \mathrm{(startup ~ constraint)}\\\\\\\\
+\quad & \mathrm{where} ~ I = [97, 240, 322, 281] \\\\\\\\
+\quad & A =  [11197, 9097, 11197, 9995] \\\\\\\\
+\quad & d =  [17, 26, 50, 53] \\\\\\\\
+\quad & s = 100
+\\end{align*}
+$$
+
+Second LaTeX expression:
+
+$$
+\small
+\\begin{align*}
+\max \quad & \sum_{i=1}^{n} R_i x_i \\\\\\\\
+\mathrm{s.t.} \quad & x_i \leq I_i, \quad \forall i \quad \mathrm{(inventory constraint)} \\\\\\\\
+& x_i \leq D_i, \quad \forall i \quad \mathrm{(demand constraint)} \\\\\\\\
+& x_i \in \mathbb{Z}_+, \quad \forall i \\\\\\\\
+\quad & \mathrm{where,} \\\\\\\\
+& R = [1283.7, 321.11, 1003.56, 371.56, 641.22, 1316.82, 1088.57, 513.64, 956.78, 178.22, 467.93, 377.8, 805.82, 894.34, 1409.21, 348.43, 1211.35, 875.91, 153.61, 951.85, 867.3, 992.14, 728.62, 1237.37, 287.36, 178.52, 1068.1, 1196.95, 973.62, 498.77, 1269.71, 518.67, 701.97, 338.6, 167.99, 678.72, 549.92, 1030.8, 478.36, 1285.81, 1175.92, 1118.63, 156.02, 753.55, 256.42, 1136.87, 1279.24, 887.06, 479.44, 1318.33, 1479.23, 367.91, 462.26, 448.61, 971.93, 1183.94, 1064.72, 872.16, 245.81, 1134.19, 972.1, 483.26, 507.13, 965.34, 1184.54, 139.14, 1128.07, 169.7, 1042.66, 869.95, 1385.88] \\\\\\\\
+& I = [70, 500, 80, 30, 250, 690, 340, 510, 990, 440, 190, 240, 850, 900, 760, 440, 240, 40, 700, 300, 680, 880, 670, 270, 890, 580, 480, 850, 920, 170, 960, 800, 290, 790, 260, 600, 40, 170, 760, 820, 590, 50, 470, 830, 670, 170, 350, 600, 610, 360, 760, 680, 160, 620, 210, 150, 200, 360, 950, 470, 290, 570, 790, 890, 580, 310, 560, 880, 350, 830] \\\\\\\\
+& D = [9, 65, 10, 4, 31, 98, 48, 64, 125, 66, 28, 29, 112, 116, 102, 55, 32, 5, 100, 40, 101, 131, 97, 40, 121, 81, 60, 112, 138, 26, 130, 102, 43, 109, 33, 84, 6, 25, 102, 121, 76, 7, 59, 125, 96, 24, 52, 87, 78, 79, 54, 95, 90, 20, 90, 30, 21, 25, 45, 125, 62, 42, 80, 109, 132, 75, 43, 75, 110, 48, 122]
+\\end{align*}
+$$
+
+Another LaTeX expression:
+$$
+\small
+\\begin{align*}
+\max \quad & \sum_{i}^n R_i x_i \\\\\\\\
+\mathrm{s.t.} \quad & x_i \leq I_i, \quad \\forall i \quad \mathrm{(inventory ~ constraint)} \\\\\\\\
+& x_i \leq D_i, \quad \\forall i \quad \mathrm{(demand ~ constraint)} \\\\\\\\
+& x_i \in \mathbb{Z}_+, \quad \\forall i \\\\\\\\
+\quad & \mathrm{where,} \\\\\\\\
+& R = [1283.7, 321.11, 1003.56, 371.56, 641.22, 1316.82, 513.64, 1088.57, 956.78, 178.22, 467.93, 377.8, 805.82, 894.34, 348.43, 1409.21, 1211.35, 875.91, 153.61, 951.85, 1237.37, 867.3, 992.14, 728.62, 287.36, 178.52, 1068.1, 973.62, 498.77, 1269.71, 1196.95, 518.67, 701.97, 338.6, 167.99, 678.72, 549.92, 1030.8, 478.36, 1285.81, 887.06, 1175.92, 1118.63, 156.02, 256.42, 753.55, 1136.87, 1279.24, 479.44, 1318.33, 1479.23, 367.91, 462.26, 1183.94, 1064.72, 448.61, 971.93, 872.16, 483.26, 972.1, 245.81, 1134.19, 507.13, 965.34, 1184.54, 139.14, 1128.07, 169.7, 1042.66, 869.95, 1385.88] \\\\\\\\
+& I = [70, 500, 80, 30, 250, 690, 510, 340, 990, 440, 190, 240, 850, 900, 440, 760, 240, 40, 700, 300, 270, 680, 880, 670, 890, 580, 480, 920, 170, 960, 850, 800, 290, 790, 260, 600, 40, 170, 760, 820, 600, 590, 50, 470, 670, 830, 170, 350, 600, 610, 360, 760, 680, 210, 150, 160, 620, 200, 290, 470, 360, 950, 570, 790, 890, 580, 310, 560, 880, 350, 830] \\\\\\\\
+& D = [9, 65, 10, 4, 31, 98, 64, 48, 125, 66, 28, 29, 112, 116, 55, 102, 32, 5, 100, 40, 40, 101, 131, 97, 121, 81, 60, 138, 26, 130, 112, 102, 43, 109, 33, 84, 6, 25, 102, 121, 87, 76, 7, 59, 96, 125, 24, 52, 78, 79, 54, 95, 90, 30, 21, 20, 90, 25, 42, 62, 45, 125, 80, 109, 132, 75, 43, 75, 110, 48, 122]
+\\end{align*}
+$$
+
+This is a math expression:
+
+$$
+x_i \leq I_i, \quad \\forall i
+$$
+
+And here's some Python code:
+
+```python
+def greet(name):
+    return f"Hello, {name}"
+```
+'''
+            
+            rendered_solution = result_nrm
+
+        else:
+            result = process_problem_type(query, api_key, problem_type)
+            rendered_solution = markdown.markdown(result, extensions=["fenced_code", CodeHiliteExtension()])
+
         rendered_solution = result
         return jsonify({
             'solution': rendered_solution,
@@ -422,7 +522,7 @@ Final Answer:
 
 def get_RA_response(query,api_key,uploaded_files):
     retrieve="product"
-    loader = CSVLoader(file_path="Large_Scale_Or_Files/RAG_Example_RA2_MD_2.csv", encoding="utf-8")
+    loader = CSVLoader(file_path="Large_Scale_Or_Files/RAG_Example_RA2.csv", encoding="utf-8")
     data = loader.load()
 
     # Each line is a document
@@ -433,7 +533,7 @@ def get_RA_response(query,api_key,uploaded_files):
     vectors = FAISS.from_documents(documents, embeddings)
 
     # Create a retriever
-    retriever = vectors.as_retriever(search_kwargs={'k': 8})
+    retriever = vectors.as_retriever(search_kwargs={'k': 3})
     few_shot_examples = []
     similar_results =  retrieve_similar_docs(query,retriever)
     for i, result in enumerate(similar_results, 1):
@@ -456,45 +556,40 @@ def get_RA_response(query,api_key,uploaded_files):
             information.append(pd.read_csv(data))
         example_data_description = "\nHere is the data:\n"
         for df_index, df in enumerate(information):
+            if df_index == 0:
+                example_data_description += f"\nDataFrame {df_index + 1} - Capacity\n"
+            elif df_index == 1:
+                example_data_description += f"\nDataFrame {df_index + 1} - Products\n"
+
             for z, r in df.iterrows():
                 description = ""
                 description += ", ".join([f"{col} = {r[col]}" for col in df.columns])
                 example_data_description += description + "\n"
-        
         label = label.replace("{", "{{").replace("}", "}}")
-        example = f"""
-    Question: Based on the following problem description and data, please formulate a complete mathematical model using real data from retrieval. {problem_description}
+        few_shot_examples.append( f"""
+Question: Based on the following problem description and data, please formulate a complete mathematical model using real data from retrieval. {problem_description}
 
-    Thought: I need to formulate the objective function and constraints of the linear programming model based on the user's description and the provided data. I should retrieve the relevant information from the CSV file. Pay attention: 1. If the data to be retrieved is not specified, retrieve the whole dataset instead. 2. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. 3. The final expressions should not be simplified or abbreviated.
+Thought: I need to formulate the objective function and constraints of the linear programming model based on the user's description and the provided data. I should retrieve the relevant information from the CSV file. If the data to be retrieved is not specified, retrieve the whole dataset instead. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. The final expressions should not be simplified or abbreviated.
 
-    Action: CSVQA
+Action: CSVQA
 
-    Action Input: Retrieve all the {retrieve} data {Related} to formulate the mathematical model with no simplification or abbreviation. Retrieve the documents in order from top to bottom. Use the retrieved context to answer the question. If mention a certain kind of product, retrieve all the relavant product information detail judging by its product name. If not mention a certain kind of product, retrieve all the data instead. Only present final answer in details of row, instead of giving a sheet format.
+Action Input: Retrieve all the {retrieve} data related to {Related} to formulate the mathematical model with no simplification or abbreviation.
 
-    Observation: {example_data_description}
+Observation: 
 
-    Thought: Now that I have the necessary data, I would construct the objective function and constraints using the retrieved data as parameters of the formula. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula according to the retrieved 'product id'. Do NOT include any explanations, notes, or extra text. Respond ONLY in this exact format: {label}. Following this example. The expressions should not be simplified or abbreviated. Besides, I need to use the $$ or $ to wrap the mathematical expressions instead of \[, \], \( or \). I also should avoid using align, align* and other latex environments. Besides, I should also avoid using \begin, \end, \text.
+Thought: Now that I have the necessary data, I would construct the objective function and constraints using the retrieved data as parameters of the formula. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula according to the retrieved 'product id'. Do NOT include any explanations, notes, or extra text. Format the expressions strictly in markdown, following this example. Besides, I need to use the $$ or $ to wrap the mathematical expressions instead of \[, \], \( or \). I also should avoid using align, align* and other latex environments. Besides, I should also avoid using \begin, \end, \text.
 
-    Final Answer: 
-    {label}
-    """
-        example = example.replace("{", "{{").replace("}", "}}")
-        few_shot_examples.append(example)
+Final Answer: 
+{label}
+            """)
 
     data = []
     for df_index, (file_name, df) in enumerate(uploaded_files):
         data.append(f"\nDataFrame {df_index + 1} - {file_name}:\n")
-        if file_name=='products.csv' or file_name=='Products.csv':
-            for i, r in df.iterrows():
-                description = f"Product id: {i+1}; "
-                description += ", ".join([f"{col} = {r[col]}" for col in df.columns])
-                data.append(description + "\n")
-        else:
-            for i, r in df.iterrows():
-                description = f""
-                description += ", ".join([f"{col} = {r[col]}" for col in df.columns])
-                data.append(description + "\n")
-
+        for i, r in df.iterrows():
+            description = ""
+            description += ", ".join([f"{col} = {r[col]}" for col in df.columns])
+            data.append(description + "\n")
     documents = [content for content in data]
 
 #    documents = process_dataset_address(dataset_address)
@@ -562,7 +657,7 @@ def get_RA_response(query,api_key,uploaded_files):
 def get_TP_response(query,api_key,uploaded_files):
     retrieve="capacity data and products data, "
     # Load and process the data
-    loader = CSVLoader(file_path="Large_Scale_Or_Files/RAG_Example_TP2_MD_2.csv", encoding="utf-8")
+    loader = CSVLoader(file_path="Large_Scale_Or_Files/RAG_Example_TP2.csv", encoding="utf-8")
     data = loader.load()
     documents = data
     embeddings = OpenAIEmbeddings(openai_api_key=api_key)
@@ -586,18 +681,15 @@ def get_TP_response(query,api_key,uploaded_files):
         information = []
 
         for data in datas:
-            df = pd.read_csv(data) 
-            file_name = data.split('/')[-1] 
-            information.append((file_name, df))
+            information.append(pd.read_csv(data))
         example_data_description = "\nHere is the data:\n"
-        for df_index, (file_name, df) in enumerate(information):
-            description = f"\nDataFrame {df_index + 1} - {file_name}\n"
-            # if df_index == 0:
-            #     example_data_description += f"\nDataFrame {df_index + 1} - Customer Demand\n"
-            # elif df_index == 1:
-            #     example_data_description += f"\nDataFrame {df_index + 1} - Supply Capacity\n"
-            # elif df_index == 2:
-            #     example_data_description += f"\nDataFrame {df_index + 1} - Transportation Cost\n"
+        for df_index, df in enumerate(information):
+            if df_index == 0:
+                example_data_description += f"\nDataFrame {df_index + 1} - Customer Demand\n"
+            elif df_index == 1:
+                example_data_description += f"\nDataFrame {df_index + 1} - Supply Capacity\n"
+            elif df_index == 2:
+                example_data_description += f"\nDataFrame {df_index + 1} - Transportation Cost\n"
 
             for z, r in df.iterrows():
                 description = ""
@@ -605,24 +697,22 @@ def get_TP_response(query,api_key,uploaded_files):
                 example_data_description += description + "\n"
             retrieve += ', '.join(df.columns)+', '
         label = label.replace("{", "{{").replace("}", "}}")
-        example = f"""
-    Question: Based on the following problem description and data, please formulate a complete mathematical model using real data from retrieval. {problem_description}
+        few_shot_examples.append( f"""
+Question: Based on the following problem description and data, please formulate a complete mathematical model using real data from retrieval. {problem_description}
 
-    Thought: I need to formulate the objective function and constraints of the linear programming model based on the user's description and the provided data. I should retrieve the relevant information from the CSV file. Pay attention: 1. If the data to be retrieved is not specified, retrieve the whole dataset instead. 2. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. 3. The final expressions should not be simplified or abbreviated.
+Thought: I need to formulate the objective function and constraints of the linear programming model based on the user's description and the provided data. I should retrieve the relevant information from the CSV file. Pay attention: 1. If the data to be retrieved is not specified, retrieve the whole dataset instead. 2. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. 3. The final expressions should not be simplified or abbreviated.
 
-    Action: CSVQA
+Action: CSVQA
 
-    Action Input: Retrieve all the {retrieve} data {Related} to formulate the mathematical model with no simplification or abbreviation. Retrieve the documents in order. Use the given context to answer the question. If mention a certain kind of product, retrieve all the relavant product information detail judging by its product name. If not mention a certain kind of product, make sure that all the data is retrieved. Only present final answer in details of row, instead of giving a sheet format.
+Action Input: Retrieve all the {retrieve} data to formulate the mathematical model with no simplification or abbreviation.
 
-    Observation: {example_data_description}
+Observation: {example_data_description}
 
-    Thought: Now that I have the necessary data, I would construct the objective function and constraints using the retrieved data as parameters of the formula. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. Do NOT include any explanations, notes, or extra text. Respond ONLY in this exact format: {label}. Following this example. The expressions should not be simplified or abbreviated. Besides, I need to use the $$ or $ to wrap the mathematical expressions instead of \[, \], \( or \). I also should avoid using align, align* and other latex environments. Besides, I should also avoid using \begin, \end, \text.
+Thought: Now that I have the necessary data, I would construct the objective function and constraints using the retrieved data as parameters of the formula. Pay attention: 1.  Respond ONLY in this exact format: {label}. Do NOT include any explanations, notes, or extra text. 2. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. 3. The final expressions should not be simplified or abbreviated. 
 
-    Final Answer: 
-    {label}
-    """
-        example = example.replace("{", "{{").replace("}", "}}")
-        few_shot_examples.append(example)
+Final Answer: 
+{label}
+                """)
         
     data = []
     for df_index, (file_name, df) in enumerate(uploaded_files):
@@ -695,14 +785,14 @@ def get_TP_response(query,api_key,uploaded_files):
 
 def get_FLP_response(query,api_key,uploaded_files):
     retrieve='supplier'
-    loader = CSVLoader(file_path="Large_Scale_Or_Files/RAG_Example_FLP2_MD_2.csv", encoding="utf-8")
+    loader = CSVLoader(file_path="Large_Scale_Or_Files/RAG_Example_FLP2.csv", encoding="utf-8")
     data = loader.load()
 
     documents = data
 
     embeddings = OpenAIEmbeddings(openai_api_key=api_key)
     vectors = FAISS.from_documents(documents, embeddings)
-    retriever = vectors.as_retriever(max_tokens_limit=400,search_kwargs={'k': 3})
+    retriever = vectors.as_retriever(max_tokens_limit=400,search_kwargs={'k': 1})
     few_shot_examples = []
     similar_results =  retrieve_similar_docs(query,retriever)
     for i, result in enumerate(similar_results, 1):
@@ -721,65 +811,56 @@ def get_FLP_response(query,api_key,uploaded_files):
             try:
                 df = pd.read_csv(file_address) 
                 file_name = file_address.split('/')[-1]  
-                for z, r in df.iterrows():
-                    description = ""
-                    description += ", ".join([f"{col} = {r[col]}" for col in df.columns])
-                    example_data_description += description + "\n"
+                if df_index == 0:
+                    result = df['demand'].values.tolist()
+                    example_data_description += "d=" + str(result) + "\n"
+                elif df_index == 1:
+                    result = df['fixed_costs'].values.tolist()
+                    example_data_description +="c=" + str(result) + "\n"
+                elif df_index == 2:
+                    matrix = df.iloc[:,1:].values
+                    example_data_description +="A=" + np.array_str(matrix)+ "."
+                df_index += 1
                 dfs.append((file_name, df))
             except Exception as e:
                 print(f"Error reading file {file_address}: {e}")
         split_at_label = split_at_address[1].split("Related:", 1)
         label = split_at_label[0].strip() 
         label = label.replace("{", "{{").replace("}", "}}")
-        Related=''
 
-        example = f"""
-    Question: Based on the following problem description and data, please formulate a complete mathematical model using real data from retrieval. {problem_description}
+        few_shot_examples.append( f"""
+Question: Based on the following problem description and data, please formulate a complete mathematical model using real data from retrieval. {problem_description}
 
-    Thought: I need to formulate the objective function and constraints of the linear programming model based on the user's description and the provided data. I should retrieve the relevant information from the CSV file. Pay attention: 1. If the data to be retrieved is not specified, retrieve the whole dataset instead. 2. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. 3. The final expressions should not be simplified or abbreviated.
+Thought: I need to formulate the objective function and constraints of the linear programming model based on the user's description and the provided data. I should retrieve the relevant information from the CSV file. If the data to be retrieved is not specified, retrieve the whole dataset instead. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. The final expressions should not be simplified or abbreviated.
 
-    Action: CSVQA
+Action: CSVQA
 
-    Action Input: Retrieve all the {retrieve} data {Related} to formulate the mathematical model with no simplification or abbreviation. Retrieve the documents in order. Use the given context to answer the question. If mention a certain kind of product, retrieve all the relavant product information detail judging by its product name. If not mention a certain kind of product, make sure that all the data is retrieved. Only present final answer in details of row, instead of giving a sheet format.
+Action Input: Retrieve all the {retrieve} data to formulate the mathematical model with no simplification or abbreviation.
 
-    Observation: {example_data_description}
+Observation: {example_data_description}
 
-    Thought: Now that I have the necessary data, I would construct the objective function and constraints using the retrieved data as parameters of the formula. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. Do NOT include any explanations, notes, or extra text. Respond ONLY in this exact format: {label}. Following this example. The expressions should not be simplified or abbreviated. Besides, I need to use the $$ or $ to wrap the mathematical expressions instead of \[, \], \( or \). I also should avoid using align, align* and other latex environments. Besides, I should also avoid using \begin, \end, \text.
+Thought: Now that I have the necessary data, I would construct the objective function and constraints using the retrieved data as parameters of the formula. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula according to the retrieved 'product id'.  Respond ONLY in this exact format: {label}. Do NOT include any explanations, notes, or extra text. The expressions should not be simplified or abbreviated. 
 
-    Final Answer: 
-    {label}
-    """
-        example = example.replace("{", "{{").replace("}", "}}")
+Final Answer: 
+{label}
 
-        few_shot_examples.append(example)
-
+               """)
 
     data = []
     data_description = ""
     for df_index, (file_name, df) in enumerate(uploaded_files):
-        data.append(f"\nDataFrame {df_index + 1} - {file_name}:\n")
         if 'demand' in file_name:
-            result = df['demand'].values.tolist()
-            data_description += "d=" + str(result) + "\n"
-            data.append(data_description + "\n")
+                result = df['demand'].values.tolist()
+                data_description += "d=" + str(result) + "\n"
         elif 'fixed_cost' in file_name:
             result = df['fixed_costs'].values.tolist()
             data_description +="c=" + str(result) + "\n"
-            data.append(data_description + "\n")
         elif 'transportation_cost' in file_name:
             matrix = df.iloc[:,1:].values
             data_description +="A=" + np.array_str(matrix)+ "\n"
-            data.append(data_description + "\n")
-        else:
-            for z, r in df.iterrows():
-                description = ""
-                description += ", ".join([f"{col} = {r[col]}" for col in df.columns])
-                data_description += description + "\n"
-                data.append(data_description + "\n")
-    documents = [content for content in data]
 
     embeddings = OpenAIEmbeddings(openai_api_key=api_key)
-    vectors = FAISS.from_texts(documents, embeddings)
+    vectors = FAISS.from_texts([data_description], embeddings)
 
     retriever = vectors.as_retriever(max_tokens_limit=400, search_kwargs={'k': 1}) 
     llm2 = ChatOpenAI(temperature=0.0, model_name='gpt-4.1', openai_api_key=api_key)
@@ -839,14 +920,14 @@ def get_FLP_response(query,api_key,uploaded_files):
     return result
 
 def get_AP_response(query,api_key,uploaded_files):
-    loader = CSVLoader(file_path="Large_Scale_Or_Files/RAG_Example_AP2_MD_2.csv", encoding="utf-8")
+    loader = CSVLoader(file_path="Large_Scale_Or_Files/RAG_Example_AP2.csv", encoding="utf-8")
     data = loader.load()
-    retrieve = ''
+    retrieve = 'relevant'
     documents = data
 
     embeddings = OpenAIEmbeddings(openai_api_key=api_key)
     vectors = FAISS.from_documents(documents, embeddings)
-    retriever = vectors.as_retriever(max_tokens_limit=400,search_kwargs={'k': 3})
+    retriever = vectors.as_retriever(max_tokens_limit=400,search_kwargs={'k': 1})
     few_shot_examples = []
     similar_results =  retrieve_similar_docs(query,retriever)
     for i, result in enumerate(similar_results, 1):
@@ -866,7 +947,7 @@ def get_AP_response(query,api_key,uploaded_files):
                 df = pd.read_csv(file_address) 
                 file_name = file_address.split('/')[-1]  
                 matrix = df.iloc[:,1:].values
-                example_data_description +=f"{file_name}=" + np.array_str(matrix)+ "\n"
+                example_data_description +="C=" + np.array_str(matrix)+ "."
                 dfs.append((file_name, df))
             except Exception as e:
                 print(f"Error reading file {file_address}: {e}")
@@ -874,39 +955,35 @@ def get_AP_response(query,api_key,uploaded_files):
         label = split_at_label[0].strip() 
         Related = split_at_label[1].strip()
         label = label.replace("{", "{{").replace("}", "}}")
-        example = f"""
-    Question: Based on the following problem description and data, please formulate a complete mathematical model using real data from retrieval. {problem_description}
+        few_shot_examples.append( f"""
+Question: Based on the following problem description and data, please formulate a complete mathematical model using real data from retrieval. {problem_description}
 
-    Thought: I need to formulate the objective function and constraints of the linear programming model based on the user's description and the provided data. I should retrieve the relevant information from the CSV file. Pay attention: 1. If the data to be retrieved is not specified, retrieve the whole dataset instead. 2. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. 3. The final expressions should not be simplified or abbreviated.
+Thought: I need to formulate the objective function and constraints of the linear programming model based on the user's description and the provided data. I should retrieve the relevant information from the CSV file. If the data to be retrieved is not specified, retrieve the whole dataset instead. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula. The final expressions should not be simplified or abbreviated.
 
-    Action: CSVQA
+Action: CSVQA
 
-    Action Input: Retrieve all the {retrieve} data {Related} to formulate the mathematical model with no simplification or abbreviation. Retrieve the documents in order. Use the given context to answer the question. If mention a certain kind of product, retrieve all the relavant product information detail judging by its product name. If not mention a certain kind of product, make sure that all the data is retrieved. Only present final answer in details of row, instead of giving a sheet format.
+Action Input: Retrieve all the {retrieve} data related to {Related} to formulate the mathematical model with no simplification or abbreviation.
 
-    Observation: {example_data_description}
+Observation:
 
-    Thought: Now that I have the necessary data, I would construct the objective function and constraints using the retrieved data as parameters of the formula. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula according to the retrieved 'product id'. Do NOT include any explanations, notes, or extra text. Respond ONLY in this exact format: {label}. Following this example. The expressions should not be simplified or abbreviated. Besides, I need to use the $$ or $ to wrap the mathematical expressions instead of \[, \], \( or \). I also should avoid using align, align* and other latex environments. Besides, I should also avoid using \begin, \end, \text.
+Thought: Now that I have the necessary data, I would construct the objective function and constraints using the retrieved data as parameters of the formula. I should pay attention if there is further detailed constraint in the problem description. If so, I should generate additional constraint formula according to the retrieved 'product id'.  Respond ONLY in this exact format: {label}. Do NOT include any explanations, notes, or extra text. The expressions should not be simplified or abbreviated. 
 
-    Final Answer: 
-    {label}
-    """
-        example = example.replace("{", "{{").replace("}", "}}")
-        few_shot_examples.append(example)
+Final Answer: 
+{label}
+
+                """)
     
 
     data_description = " "
     data = []
     for df_index, (file_name, df) in enumerate(uploaded_files):
         data.append(f"\nDataFrame {df_index + 1} - {file_name}:\n")
-        # matrix = df.iloc[:,1:].values
-        # data_description +=f"{file_name}=" + np.array_str(matrix)+ "."
         for i, r in df.iterrows():
-            data_description += ", ".join([f"{col} = {r[col]}" for col in df.columns])
-            data.append(data_description + "\n")
-
-    documents = [content for content in data]
+            matrix = df.iloc[:,1:].values
+            data_description +="C=" + np.array_str(matrix)+ "."
+ 
     embeddings = OpenAIEmbeddings(openai_api_key=api_key)
-    vectors = FAISS.from_texts(documents, embeddings)
+    vectors = FAISS.from_texts([data_description], embeddings)
 
     retriever = vectors.as_retriever(max_tokens_limit=400, search_kwargs={'k': 1}) 
     llm2 = ChatOpenAI(temperature=0.0, model_name='gpt-4.1', openai_api_key=api_key)
@@ -1112,7 +1189,7 @@ def get_Others_response(query,api_key, uploaded_files):
 
     result = agent2.invoke(query)
 
-    return result
+    return result['output']
 def get_others_without_CSV_response(query,api_key):
     llm = ChatOpenAI(
         temperature=0.0, model_name="gpt-4.1", top_p=1, n=1, openai_api_key=api_key
@@ -1234,7 +1311,7 @@ Final Answer:
 
 def get_code(output,selected_problem,api_key):
     llm_code = ChatOpenAI(
-        temperature=0.0, model_name="gpt-4.1",top_p=1,n = 1, openai_api_key=api_key
+        temperature=0.0, model_name="gpt-4.1", openai_api_key=api_key
     )
 
     prompt = f"""
@@ -1251,19 +1328,28 @@ For example, here is a simple instance for reference:
 
 Mathematical Optimization Model:
 
-Objective Function:
+##### Objective Function: 
+
 $\quad \quad \max \quad \sum_i A_i \cdot x_i$
-Constraints
-1. Inventory Constraints:
-$\quad \quad x_i \leq I_i, \quad \forall i$
-2. Demand Constraints:
-$x_i \leq d_i, \quad \forall i$
-3. Startup Constraint:
-$\sum_i x_i \geq s$
-Retrieved Information
+
+##### Constraints
+
+###### 1. Inventory Constraints: 
+
+$\quad \quad x_i \leq I_i, \quad \forall i $
+
+###### 2. Demand Constraints: 
+
+$x_i \leq d_i, \quad \forall i $
+
+###### 3. Variable Constraints: 
+
+$x_i \in \mathbb Z, x_i \geq 0, \quad \forall i $
+
+###### Retrieved Information
 $\small I = [7550, 6244]$
-$\small A = [149, 389]$
-$\small d = [15057, 12474]$
+$\small A =  [149, 389]$
+$\small d =  [15057, 12474]$
 $\small s = 100$
 
 The corresponding Python code for this instance is as follows:
@@ -1301,23 +1387,16 @@ For example, here is a simple instance for reference:
 
 Mathematical Optimization Model:
 
-Objective Function:
-$\quad \quad \min \quad \sum_{i} \sum_{j} A_{ij} \cdot x_{ij} + \sum_{i} c_i \cdot y_i$
-
-Constraints
-1. Demand Constraint:
-$\quad \quad \sum_i x_{ij} = d_j, \quad \forall j$
-2. Capacity Constraint:
-$\quad \quad \sum_j x_{ij} \leq M \cdot y_i, \quad \forall i$
-3. Non-negativity:
-$\quad \quad x_{ij} \geq 0, \quad \forall i,j$
-4. Binary Requirement:
-$\quad \quad y_i \in \{0,1\}, \quad \forall i$
-
-Retrieved Information
-$\small d = [1083, 776, 16214, 553, 17106, 594, 732]$
-$\small c = [102.33, 94.92, 91.83, 98.71, 95.73, 99.96, 98.16]$
-$\small A = \begin{bmatrix}
+\begin{aligned}
+\text{Minimize} \quad & \sum_{i} \sum_{j} A_{ij} x_{ij} + \sum_{i} c_i y_i \\
+\text{Subject To} \quad & \\
+& \text{demand\_constraint: } \sum_i x_{ij} = d_j, \quad \forall j \\
+& \text{M\_constraint: } \sum_j x_{ij} \leq M y_i, \quad \forall i \\
+& x_{ij} \geq 0, \quad \forall i,j \\
+& y_i \in \{0,1\}, \quad \forall i \\
+\text{Where} \quad & d = [1083, 776, 16214, 553, 17106, 594, 732] \\
+& c = [102.33, 94.92, 91.83, 98.71, 95.73, 99.96, 98.16] \\
+& A = \begin{bmatrix}
 1506.22 & 70.90 & 8.44 & 260.27 & 197.47 & 71.71 & 61.19 \\  
 1732.65 & 1780.72 & 567.44 & 448.68 & 29.00 & 1484.91 & 963.92 \\  
 115.66 & 100.76 & 64.68 & 1324.53 & 64.99 & 134.88 & 2102.83 \\  
@@ -1325,9 +1404,9 @@ $\small A = \begin{bmatrix}
 42.90 & 891.01 & 1013.94 & 1128.72 & 58.91 & 42.89 & 1570.31 \\  
 0.70 & 139.46 & 70.03 & 79.15 & 1482.00 & 0.91 & 110.46 \\  
 1732.30 & 1780.44 & 486.50 & 523.74 & 522.08 & 82.48 & 826.41
-\end{bmatrix}$
-$\small M = \sum_j d_j = 1083 + 776 + 16214 + 553 + 17106 + 594 + 732 = 38058 $
-
+\end{bmatrix} \\
+& M = \sum_j d_j = 1083 + 776 + 16214 + 553 + 17106 + 594 + 732 = 38058
+\end{aligned}
 
 The corresponding Python code for this instance is as follows:
 
@@ -1375,23 +1454,18 @@ For example, here is a simple instance for reference:
 
 Mathematical Optimization Model:
 
-Objective Function:
-$\quad \quad \min \quad \sum_{i=1}^3 \sum_{j=1}^3 c_{ij} \cdot x_{ij}$
-
-Constraints
-1. Row Assignment Constraint:
-$\quad \quad \sum_{j=1}^3 x_{ij} = 1, \quad \forall i \in \{1,2,3\}$
-2. Column Assignment Constraint:
-$\quad \quad \sum_{i=1}^3 x_{ij} = 1, \quad \forall j \in \{1,2,3\}$
-3. Binary Constraint:
-$\quad \quad x_{ij} \in \{0,1\}, \quad \forall i,j$
-
-Retrieved Information
-$\small c = \begin{bmatrix}
+\begin{aligned}
+\text{Minimize} \quad & \sum_{i=1}^3 \sum_{j=1}^3 c_{ij} x_{ij} \\
+\text{where} \quad & c = \begin{bmatrix}
 3000 & 3200 & 3100 \\
 2800 & 3300 & 2900 \\
 2900 & 3100 & 3000 
-\end{bmatrix}$
+\end{bmatrix} \\
+\text{Subject To} \quad & \\
+& \sum_{j=1}^3 x_{ij} = 1 \quad \forall i \in \{1,2,3\} \\
+& \sum_{i=1}^3 x_{ij} = 1 \quad \forall j \in \{1,2,3\} \\
+& x_{ij} \in \{0,1\} \quad \forall i,j
+\end{aligned}
 
 The corresponding Python code for this instance is as follows:
 
@@ -1427,31 +1501,26 @@ for j in range(c.shape[1]):
 m.optimize()
 """
 
-    
     elif selected_problem == "Transportation Problem" or selected_problem == "TP" or selected_problem == "Transportation":
         prompt += """
 For example, here is a simple instance for reference:
 
 Mathematical Optimization Model:
 
-Objective Function:
-$\quad \quad \min \quad \sum_i \sum_j c_{ij} \cdot x_{ij}$
-
-Constraints
-1. Demand Constraint:
-$\quad \quad \sum_i x_{ij} \geq d_j, \quad \forall j$
-2. Capacity Constraint:
-$\quad \quad \sum_j x_{ij} \leq s_i, \quad \forall i$
-
-Retrieved Information
-$\small d = [94, 39, 65, 435]$
-$\small s = [2531, 20, 210, 241]$
-$\small c = \\begin{bmatrix}
+\begin{aligned}
+\text{Minimize} \quad & \sum_i \sum_j c_{ij} \cdot x_{ij} \\
+\text{Subject To} \quad & \\
+& \text{demand\_constraint: } \sum_i x_{ij} \geq d_j, \quad \forall j \\
+& \text{capacity\_constraint: } \sum_j x_{ij} \leq s_i, \quad \forall i \\
+\text{Where} \quad & d = [94, 39, 65, 435] \\
+& s = [2531, 20, 210, 241] \\
+& c = \begin{bmatrix}
 883.91 & 0.04 & 0.03 & 44.45 \\
 543.75 & 23.68 & 23.67 & 447.75 \\
 537.34 & 23.76 & 498.95 & 440.60 \\
 1791.49 & 68.21 & 1432.48 & 1527.76
-\\end{bmatrix}$
+\end{bmatrix}
+\end{aligned}
 
 The corresponding Python code for this instance is as follows:
 
@@ -1505,19 +1574,15 @@ Always remember: If not specified. All the variables are non-negative interger.
 
 Mathematical Optimization Model:
 
-Objective Function:
-$\quad \quad \max \quad \sum_i \sum_j p_i \cdot x_{ij}$
-
-Constraints
-1. Capacity Constraint:
-$\quad \quad \sum_i a_i \cdot x_{ij} \leq c_j, \quad \forall j$
-2. Non-negativity Constraint:
-$\quad \quad x_{ij} \geq 0, \quad \forall i,j$
-
-Retrieved Information
-$\small p = [321, 309, 767, 300, 763, 318, 871, 522, 300, 275, 858, 593, 126, 460, 685, 443, 700, 522, 940, 598]$
-$\small a = [495, 123, 165, 483, 472, 258, 425, 368, 105, 305, 482, 387, 469, 341, 318, 104, 377, 213, 56, 131]$
-$\small c = [4466]$
+\begin{aligned}
+\text{Maximize} \quad & \sum_i \sum_j p_i \cdot x_{ij} \\
+\text{Subject To} \quad & \\
+& \text{capacity\_constraint: } \sum_i a_i \cdot x_{ij} \leq c_j, \quad \forall j \\
+& \text{Non-negativity constraint: } x_{ij} \geq 0, \quad \forall i,j \\
+\text{Where} \quad & p = [321, 309, 767, 300, 763, 318, 871, 522, 300, 275, 858, 593, 126, 460, 685, 443, 700, 522, 940, 598] \\
+& a = [495, 123, 165, 483, 472, 258, 425, 368, 105, 305, 482, 387, 469, 341, 318, 104, 377, 213, 56, 131] \\
+& c = [4466]
+\end{aligned}
 
 The corresponding Python code for this instance is as follows:
 
@@ -1548,22 +1613,17 @@ m.optimize()
 ```
 
 -----
-Here is the second instance for reference:
+Here is another simple instance for reference:
 
-Objective Function:
-$\quad \quad \max \quad \sum_i p_i \cdot x_i$
+Maximize \(\sum_i p_i \cdot x_i\) 
+Subject To:
+- Capacity constraint: \(\sum_i a_i \cdot x_i \leq 180\)
+- Dependency constraint: \(x_1 \leq x_3\)
+- Non-negativity constraint: \(x_i \geq 0, \forall i\)
 
-Constraints
-1. Capacity Constraint:
-$\quad \quad \sum_i a_i \cdot x_i \leq 180$
-2. Dependency Constraint:
-$\quad \quad x_1 \leq x_3$
-3. Non-negativity Constraint:
-$\quad \quad x_i \geq 0, \quad \forall i$
-
-Retrieved Information
-$\small p = [888, 134, 129, 370, 921, 765, 154, 837, 584, 365]$
-$\small a = [4, 2, 4, 3, 2, 1, 2, 1, 3, 3]$
+Where:
+- \(p = [888, 134, 129, 370, 921, 765, 154, 837, 584, 365]\) (expected profit for each type of bread)
+- \(a = [4, 2, 4, 3, 2, 1, 2, 1, 3, 3]\) (weight for each type of bread)
 
 The corresponding Python code for this instance is as follows:
 
@@ -1587,156 +1647,8 @@ m.addConstr(x[0] <= x[2], name="dependency_constraint")
 
 # Solve the model
 m.optimize()
-
-
-Here is the third instance for reference:
-
-## Mathematical Model
-
-**Decision Variables**
-
-- $x_1$: Number of HiFi-1 radios produced per day
-- $x_2$: Number of HiFi-2 radios produced per day
-- $I_1$: Idle time (minutes) at workstation 1 per day
-- $I_2$: Idle time (minutes) at workstation 2 per day
-- $I_3$: Idle time (minutes) at workstation 3 per day
-
-**Parameters**
-
-- Maximum available time per workstation per day: $480$ minutes
-- Maintenance time per day:
-  - Workstation 1: $0.10 \times 480 = 48$ minutes
-  - Workstation 2: $0.14 \times 480 = 67.2$ minutes
-  - Workstation 3: $0.12 \times 480 = 57.6$ minutes
-- Net available time per day:
-  - Workstation 1: $480 - 48 = 432$ minutes
-  - Workstation 2: $480 - 67.2 = 412.8$ minutes
-  - Workstation 3: $480 - 57.6 = 422.4$ minutes
-- Assembly times per unit:
-  - Workstation 1: HiFi-1: $6$ min, HiFi-2: $4$ min
-  - Workstation 2: HiFi-1: $5$ min, HiFi-2: $5$ min
-  - Workstation 3: HiFi-1: $4$ min, HiFi-2: $6$ min
-
-**Objective Function**
-
-Minimize total idle time:
-$$
-\min \ I_1 + I_2 + I_3
-$$
-
-**Subject to**
-
-Workstation 1 time balance:
-$$
-6x_1 + 4x_2 + I_1 = 432
-$$
-
-Workstation 2 time balance:
-$$
-5x_1 + 5x_2 + I_2 = 412.8
-$$
-
-Workstation 3 time balance:
-$$
-4x_1 + 6x_2 + I_3 = 422.4
-$$
-
-Non-negativity:
-$$
-x_1 \geq 0, \quad x_2 \geq 0
-$$
-$$
-I_1 \geq 0, \quad I_2 \geq 0, \quad I_3 \geq 0
-$$
-
-**Where**
-
-- $x_1$ = number of HiFi-1 radios produced per day
-- $x_2$ = number of HiFi-2 radios produced per day
-- $I_1, I_2, I_3$ = idle time (minutes) at workstations 1, 2, 3 per day
-
-The corresponding Python code for this instance is as follows:
-
-import gurobipy as gp
-from gurobipy import GRB
-
-# Create the model
-m = gp.Model("Radio_IdleTime_Minimization")
-
-# Decision variables (all non-negative integers)
-x1 = m.addVar(vtype=GRB.CONTINUOUS, name="x1")
-x2 = m.addVar(vtype=GRB.CONTINUOUS, name="x2")
-I1 = m.addVar(vtype=GRB.CONTINUOUS, name="I1")
-I2 = m.addVar(vtype=GRB.CONTINUOUS, name="I2")
-I3 = m.addVar(vtype=GRB.CONTINUOUS, name="I3")
-
-# Objective function: Minimize total idle time
-m.setObjective(I1 + I2 + I3, GRB.MINIMIZE)
-
-# Constraints
-m.addConstr(6*x1 + 4*x2 + I1 == 432, name="workstation1_time_balance")
-m.addConstr(5*x1 + 5*x2 + I2 == 412.8, name="workstation2_time_balance")
-m.addConstr(4*x1 + 6*x2 + I3 == 422.4, name="workstation3_time_balance")
-
-# Non-negativity is already enforced by variable types
-
-# Solve the model
-m.optimize()
-
-The fourth instance is:
-
-#### Decision Variables
-- $p_1$: Equilibrium price of Coal
-- $p_2$: Equilibrium price of Power
-- $p_3$: Equilibrium price of Steel
-
-#### Constraints
-
-**1. Steel sector equilibrium:**  
-$0.4p_1 + 0.5p_2 + 0.2p_3 = p_3$
-
-**2. Coal sector equilibrium:**  
-$0.0p_1 + 0.4p_2 + 0.6p_3 = p_1$
-
-**3. Power sector equilibrium:**  
-$0.6p_1 + 0.1p_2 + 0.2p_3 = p_2$
-
-**4. Steel price fixed:**  
-$p_3 = 10000$
-
-The corresponding Python code for this instance is as follows:
-
-import gurobipy as gp
-from gurobipy import GRB
-
-# Create the model
-m = gp.Model("Equilibrium_Prices")
-
-# Decision variables: p1, p2, p3 (all non-negative integers)
-p1 = m.addVar(vtype=GRB.CONTINUOUS, name="p1")
-p2 = m.addVar(vtype=GRB.CONTINUOUS, name="p2")
-p3 = m.addVar(vtype=GRB.CONTINUOUS, name="p3")
-
-# Constraints
-m.addConstr(0.4*p1 + 0.5*p2 + 0.2*p3 == p3, name="steel_equilibrium")
-m.addConstr(0.0*p1 + 0.4*p2 + 0.6*p3 == p1, name="coal_equilibrium")
-m.addConstr(0.6*p1 + 0.1*p2 + 0.2*p3 == p2, name="power_equilibrium")
-m.addConstr(p3 == 10000, name="steel_price_fixed")
-
-# Dummy objective (since the system is a set of equations)
-m.setObjective(0, GRB.MINIMIZE)
-
-# Solve the model
-m.optimize()
-
-# Print results
-if m.status == GRB.OPTIMAL:
-    print(f"p1 (Coal price): {{p1.X}}")
-    print(f"p2 (Power price): {{p2.X}}")
-    print(f"p3 (Steel price): {{p3.X}}")
-
+        
         """
-
 
     else:
         prompt += """
@@ -1776,6 +1688,17 @@ m.addConstr(x_F >= 10, name="full_time_minimum_constraint")
 # Solve the model
 m.optimize()
 ```
+
+
+
+
+
+
+
+
+
+
+
 The another example is:
 
 Mathematical Optimization Model:
@@ -1824,133 +1747,15 @@ for j in range(c.shape[1]):
 # Solve the model
 m.optimize() 
 ```
-
-The third example is:
-## Mathematical Model
-
-**Decision Variables:**
-- $x_1$: Area planted with soybeans (hectares)
-- $x_2$: Area planted with corn (hectares)
-- $x_3$: Area planted with wheat (hectares)
-- $y$: Number of cows raised
-- $z$: Number of chickens raised
-- $l_1$: Surplus labor allocated to external work in autumn/winter (person-days)
-- $l_2$: Surplus labor allocated to external work in spring/summer (person-days)
-
----
-
-**Objective Function (Maximize total annual net income):**
-
-$$
-\max \quad 175x_1 + 300x_2 + 120x_3 + [\text{(net income per cow)}]\, y + [\text{(net income per chicken)}]\, z + 1.8l_1 + 2.1l_2 - 400y - 3z
-$$
-
-But since only the costs for cows and chickens are given, and no additional net income per animal is specified, the livestock terms are just $-400y$ and $-3z$ (costs), unless there is additional net income per animal (not specified in the data). Thus, the objective is:
-
-$$
-\max \quad 175x_1 + 300x_2 + 120x_3 - 400y - 3z + 1.8l_1 + 2.1l_2
-$$
-
----
-
-**Subject to:**
-
-**1. Land constraint:**
-$$
-x_1 + x_2 + x_3 + 1.5y \leq 100
-$$
-
-**2. Capital constraint:**
-$$
-400y + 3z \leq 15000
-$$
-
-**3. Autumn/Winter labor constraint:**
-$$
-20x_1 + 35x_2 + 10x_3 + 100y + 0.6z + l_1 = 3500
-$$
-
-**4. Spring/Summer labor constraint:**
-$$
-50x_1 + 75x_2 + 40x_3 + 50y + 0.3z + l_2 = 4000
-$$
-
-**5. Cow infrastructure constraint:**
-$$
-y \leq 32
-$$
-
-**6. Chicken infrastructure constraint:**
-$$
-z \leq 3000
-$$
-
-**7. Non-negativity constraints:**
-$$
-x_1 \geq 0,\quad x_2 \geq 0,\quad x_3 \geq 0,\quad y \geq 0,\quad z \geq 0,\quad l_1 \geq 0,\quad l_2 \geq 0
-$$
-
----
-
-**Variable Definitions:**
-- $x_1$: Hectares of soybeans planted
-- $x_2$: Hectares of corn planted
-- $x_3$: Hectares of wheat planted
-- $y$: Number of cows raised
-- $z$: Number of chickens raised
-- $l_1$: Surplus labor (person-days) for external work in autumn/winter
-- $l_2$: Surplus labor (person-days) for external work in spring/summer
-
-The corresponding Python code for this instance is as follows:
-```python
-import gurobipy as gp
-from gurobipy import GRB
-
-# Create the model
-m = gp.Model("Farm_Optimization")
-
-# Decision variables (all non-negative integers)
-x1 = m.addVar(vtype=GRB.CONTINUOUS, name="x1")   # Soybeans (hectares)
-x2 = m.addVar(vtype=GRB.CONTINUOUS, name="x2")   # Corn (hectares)
-x3 = m.addVar(vtype=GRB.CONTINUOUS, name="x3")   # Wheat (hectares)
-y  = m.addVar(vtype=GRB.INTEGER, name="y")    # Cows
-z  = m.addVar(vtype=GRB.INTEGER, name="z")    # Chickens
-l1 = m.addVar(vtype=GRB.CONTINUOUS, name="l1")   # Surplus labor autumn/winter
-l2 = m.addVar(vtype=GRB.CONTINUOUS, name="l2")   # Surplus labor spring/summer
-
-# Objective function
-m.setObjective(
-    175*x1 + 300*x2 + 120*x3 - 400*y - 3*z + 1.8*l1 + 2.1*l2,
-    GRB.MAXIMIZE
-)
-
-# Constraints
-
-# 1. Land constraint
-m.addConstr(x1 + x2 + x3 + 1.5*y <= 100, name="land_constraint")
-
-# 2. Capital constraint
-m.addConstr(400*y + 3*z <= 15000, name="capital_constraint")
-
-# 3. Autumn/Winter labor constraint
-m.addConstr(20*x1 + 35*x2 + 10*x3 + 100*y + 0.6*z + l1 == 3500, name="autumn_winter_labor")
-
-# 4. Spring/Summer labor constraint
-m.addConstr(50*x1 + 75*x2 + 40*x3 + 50*y + 0.3*z + l2 == 4000, name="spring_summer_labor")
-
-# 5. Cow infrastructure constraint
-m.addConstr(y <= 32, name="cow_infrastructure")
-
-# 6. Chicken infrastructure constraint
-m.addConstr(z <= 3000, name="chicken_infrastructure")
-
-# 7. Non-negativity constraints are handled by variable types
-
-# Solve the model
-m.optimize()
-
-```
 """
+
+
+
+
+
+
+
+
     messages = [
         HumanMessage(content=prompt) 
     ]

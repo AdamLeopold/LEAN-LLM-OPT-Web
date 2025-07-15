@@ -1,0 +1,4 @@
+﻿Parameter names,Truck1,Truck2,Truck3
+Start-up cost (Yuan/time),500,300,400
+Transportation cost (RMB/kg),2,3,2.5
+Maximum load (kg),1000,800,1200

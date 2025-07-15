@@ -1,0 +1,2250 @@
+Query,Data_address,Label,Related
+A 24-hour bus service requires staffing drivers and attendants for six daily shifts as specified in shift_requirements.csv. Each worker starts at the beginning of a shift and works 8 consecutive hours. Determine the minimum number of workers needed to meet all shift requirements while ensuring continuous coverage.,Large_Scale_Or_Files/Other_example/model1/shift_requirements.csv,"#### Decision Variables
+- $x_i$: Number of workers starting at shift $i$ ($i=1,\dots,6$)
+
+#### Objective Function
+Minimize total workers: 
+$\quad \quad \min \ x_1 + x_2 + x_3 + x_4 + x_5 + x_6$
+
+#### Constraints
+**1. Shift 1 Coverage (6:00-10:00)** 
+$\quad \quad x_1 + x_6 \geq 60$ 
+
+**2. Shift 2 Coverage (10:00-14:00)** 
+$\quad \quad x_1 + x_2 \geq 70$ 
+
+**3. Shift 3 Coverage (14:00-18:00)** 
+$\quad \quad x_2 + x_3 \geq 60$ 
+
+**4. Shift 4 Coverage (18:00-22:00)** 
+$\quad \quad x_3 + x_4 \geq 50$ 
+
+**5. Shift 5 Coverage (22:00-2:00)** 
+$\quad \quad x_4 + x_5 \geq 50$ 
+
+**6. Shift 6 Coverage (2:00-6:00)** 
+$\quad \quad x_5 + x_6 \geq 20$ 
+
+**7. Non-negativity** 
+$\quad \quad x_i \geq 0 \quad \forall i \in \{1,2,3,4,5,6\}$",
+"A factory plans to produce two products (A and B) using three limited resources: steel, iron, and machine hours. The resource consumption per unit of product and profit margins are shown in production_data.csv. Determine the optimal production quantities to maximize total profit while respecting resource constraints.",Large_Scale_Or_Files/Other_example/model2/production_data.csv,"#### Decision Variables
+- $x_1$: Quantity of Product A to produce
+- $x_2$: Quantity of Product B to produce
+
+#### Objective Function
+Maximize total profit: 
+$\quad \quad \max \ 80x_1 + 125x_2$
+
+#### Constraints
+**1. Steel Constraint** 
+$\quad \quad 8x_1 + 5x_2 \leq 3500$ 
+
+**2. Iron Constraint** 
+$\quad \quad 6x_1 + 4x_2 \leq 1800$ 
+
+**3. Machine Hours Constraint** 
+$\quad \quad 4x_1 + 5x_2 \leq 2800$ 
+
+**4. Non-negativity** 
+$\quad \quad x_1 \geq 0, x_2 \geq 0$",
+"A specialty chemical factory produces three premium products (A, B, C) by blending three raw materials (1, 2, 3). The factory supplies custom formulations to high-end manufacturers:
+
+Product A is a precision industrial lubricant requiring _50% Material 1 and _25% Material 2
+Product B is an aerospace-grade adhesive requiring _25% Material 1 and _50% Material 2
+Product C is a general-purpose compound with no material restrictions
+Raw material costs and availability are in raw_materials.csv, while product specifications and selling prices are in products.csv. Determine the optimal blending plan to maximize daily profit.","Large_Scale_Or_Files/Other_example/model3/products.csv
+Large_Scale_Or_Files/Other_example/model3/raw_materials.csv","#### Decision Variables
+- $x_{ij}$: kg of material $j$ used in product $i$ 
+$i \in \{\text{A}, \text{B}, \text{C}\}, j \in \{1,2,3\}$
+
+#### Objective Function
+Maximize profit: 
+$\quad \quad \max \ 60(x_{A1} + x_{A2} + x_{A3}) + 70(x_{B1} + x_{B2} + x_{B3}) + 60(x_{C1} + x_{C2} + x_{C3})$
+$\quad \quad - 65(x_{A1} + x_{B1} + x_{C1}) - 25(x_{A2} + x_{B2} + x_{C2}) - 35(x_{A3} + x_{B3} + x_{C3})$
+
+#### Constraints
+**1. Material Availability** 
+$\quad \quad x_{A1} + x_{B1} + x_{C1} \leq 100$ 
+$\quad \quad x_{A2} + x_{B2} + x_{C2} \leq 100$ 
+$\quad \quad x_{A3} + x_{B3} + x_{C3} \leq 60$ 
+
+**2. Product A Specifications** 
+$\quad \quad x_{A1} \geq 0.5(x_{A1} + x_{A2} + x_{A3})$ 
+$\quad \quad x_{A2} \leq 0.25(x_{A1} + x_{A2} + x_{A3})$ 
+
+**3. Product B Specifications** 
+$\quad \quad x_{B1} \geq 0.25(x_{B1} + x_{B2} + x_{B3})$ 
+$\quad \quad x_{B2} \leq 0.5(x_{B1} + x_{B2} + x_{B3})$ 
+
+**4. Non-negativity** 
+$\quad \quad x_{ij} \geq 0 \quad \forall i,j$",
+"A consumer electronics factory operates an assembly line with three workstations producing two premium radio models: HiFi-1 and HiFi-2. The assembly times per unit at each station are shown in workstation_times.csv. Daily maintenance of workstation 1, workstation 2, and workstation 3 takes 10%, 14%, and 12% of the total available time of each workstation, and the maximum available time of each workstation is 480 minutes a day. Determine the optimal production mix to minimize total idle time across all workstations while respecting maintenance schedules.",Large_Scale_Or_Files/Other_example/model4/workstation_times.csv,"#### Decision Variables
+- $x_1$: Units of HiFi-1 to produce
+- $x_2$: Units of HiFi-2 to produce
+
+#### Objective Function
+Minimize total idle time: 
+$\quad \quad \min \ 1267.2 - (15x_1 + 15x_2)$ 
+*(Equivalent to maximizing $15x_1 + 15x_2$)*
+
+#### Constraints
+**1. Workstation 1 Capacity** 
+$\quad \quad 6x_1 + 4x_2 \leq 432$ 
+
+**2. Workstation 2 Capacity** 
+$\quad \quad 5x_1 + 5x_2 \leq 412.8$ 
+
+**3. Workstation 3 Capacity** 
+$\quad \quad 4x_1 + 6x_2 \leq 422.4$ 
+
+**4. Non-negativity** 
+$\quad \quad x_1 \geq 0, x_2 \geq 0$",
+"A precision manufacturing facility produces three aerospace-grade widgets: WidgetA, WidgetB, and WidgetC. The product_resources.csv file details the essential production parameters for each widget, specifying the labor hours required per unit, the amounts of Material A and Material B consumed per unit, and the base profit generated per unit sold. During the manufacturing process, WidgetC generate CatalystX as a valuable byproduct at a rate of 5kg per unit produced. This CatalystX has significant market value and can be sold to pharmaceutical partners at $300 per kilogram, though monthly sales are capped at 150kg due to market demand limitations. Any unsold CatalystX requires specialized hazardous waste disposal costing $200 per kilogram to comply with environmental regulations. Critical production constraints are defined in the resource_limits.csv file: monthly labor hours cannot exceed 240 hours, Material A consumption is limited to 2,400kg, and Material B usage is capped at 1,500kg. The optimization challenge involves determining the ideal production quantities for each widget to maximize total profits","Large_Scale_Or_Files/Other_example/model5/resource_limits.csv
+Large_Scale_Or_Files/Other_example/model5/product_resources.csv","#### Decision Variables
+- $x_A$: Units of WidgetA produced
+- $x_B$: Units of WidgetB produced
+- $x_C$: Units of WidgetC produced
+- $s$: kg of CatalystX sold
+
+#### Objective Function
+Maximize total profit: 
+$\quad \quad \max \ 525x_A + 678x_B + 812x_C + 300s - 200(5x_C - s)$
+
+#### Constraints
+**1. Labor Hours Constraint** 
+$\quad \quad 1.6x_A + 2.0x_B + 2.5x_C \leq 240$ 
+
+**2. Material A Constraint** 
+$\quad \quad 24x_A + 20x_B + 12x_C \leq 2400$ 
+
+**3. Material B Constraint** 
+$\quad \quad 14x_A + 10x_B + 18x_C \leq 1500$ 
+
+**4. CatalystX Sales Limit** 
+$\quad \quad s \leq 150$ 
+
+**5. CatalystX Generation Limit** 
+$\quad \quad s \leq 5x_C$ 
+
+**6. Non-negativity** 
+$\quad \quad x_A \geq 0, x_B \geq 0, x_C \geq 0, s \geq 0$",
+"The problem of mutual payment of wages is generated in the process of multi-party cooperation and mutual labor. Such as carpenters, electricians, painters and so on form a mutual aid group to complete the decoration work of each family together. Because the labor amount of different types of work is different, in order to balance the interests of all parties, it is necessary to calculate the standard of mutual pay wages. Three skilled tradespeople - a Carpenter, Electrician, and Painter - have agreed to exchange home renovation services. The work_days.csv file documents their work arrangement. Each row in the work_days.csv file shows how many days each specialist spent renovating the others' homes. Each worker contributed exactly 10 work days total across all projects, including their own home renovation. Carpenter's daily wage is 60.00 yuan. Determine daily wages of Electrician and Painter such that each worker's total income equals their total expenditure for work done at their home.",Large_Scale_Or_Files/Other_example/model6/work_days.csv,"#### Decision Variables
+- $x$: Carpenter's daily wage (yuan)
+- $y$: Electrician's daily wage (yuan)
+- $z$: Painter's daily wage (yuan)
+
+#### Constraints
+**1. Carpenter's Balance** 
+$\quad \quad -8x + y + 6z = 0$ 
+
+**2. Electrician's Balance** 
+$\quad \quad 4x -5y + z = 0$ 
+
+**3. Painter's Balance** 
+$\quad \quad 4x + 4y -7z = 0$ 
+
+**4. Wage Bounds** 
+$\quad \quad x = 60$",
+"A closed economic system consists of three sectors: Coal, Power, and Steel. The input-output table in input_output_table.csv shows the distribution of each sector's output to the other sectors as proportions of total output. Determine equilibrium prices (if steel is 10000) for each sector such that the value of each sector's total output equals the value of all inputs it receives from other sectors.",Large_Scale_Or_Files/Other_example/model7/input_output_table.csv,"#### Decision Variables
+- $x_1$: Price of Coal sector output (monetary units)
+- $x_2$: Price of Power sector output (monetary units)
+- $x_3$: Price of Steel sector output (monetary units)
+
+#### Constraints
+**1. Coal Sector Balance** 
+$\quad \quad x_1 - 0.4x_2 - 0.6x_3 = 0$ 
+
+**2. Power Sector Balance** 
+$\quad \quad -0.6x_1 + 0.9x_2 - 0.2x_3 = 0$ 
+
+**3. Steel Sector Balance** 
+$\quad \quad -0.4x_1 - 0.5x_2 + 0.8x_3 = 0$ 
+
+**4. Assumption Constraint** 
+$\quad \quad x_3 = 10000$ 
+
+**5. Non-negativity** 
+$\quad \quad x_1 \geq 0, x_2 \geq 0, x_3 \geq 0$",
+"Educational planners must be able to address the travel-time issue, while striving to satisfy other requirements. One approach to the problem is to consider racial balance, school capacity, and population of the school district as constraints, while striving to transport the children with as little inconvenience to them as possible . Suppose the Capital City School District has two elementary schools, with individual capacities in school_capacity.csv,there are three neighborhoods with the elementary school populations as summarized in neighborhoods_population.csv and the distance in miles from school to neighborhoods is in distance.csv. The district has decided to integrate by school rather than by grade level. A school will be considered to be in racial balance when it deviates by no more than 10 percent from the district ratio of 60 percent white and 40 percent nonwhite . The district wishes to devise a busing plan that will transport pupils to any school in the same racial ratio as their neighborhood and will minimize the distance the youngsters must travel.","Large_Scale_Or_Files/Other_example/11/school_capacity.csv
+Large_Scale_Or_Files/Other_example/11/neighborhoods_population.csv
+Large_Scale_Or_Files/Other_example/11/distance.csv","## School Assignment Linear Programming Formulation
+
+### Sets and Indices
+- $i = 1,2$: School index ($1=$ School I, $2=$ School II)
+- $j = 1,2,3$: Neighborhood index ($1=$ A, $2=$ B, $3=$ C)
+
+---
+
+### Decision Variables
+
+- $x_{ij}^w$: Number of white students assigned from neighborhood $j$ to school $i$
+- $x_{ij}^{nw}$: Number of nonwhite students assigned from neighborhood $j$ to school $i$
+
+---
+
+### Objective Function
+
+Minimize total transportation cost:
+$$
+\min \sum_{i=1}^2 \sum_{j=1}^3 d_{ij} \cdot \left( x_{ij}^w + x_{ij}^{nw} \right)
+$$
+
+---
+
+### Constraints
+
+**1. Assignment Constraints (All students from each neighborhood must be assigned):**
+For each neighborhood $j$,
+$$
+\sum_{i=1}^2 x_{ij}^w = P_j^w, \qquad \sum_{i=1}^2 x_{ij}^{nw} = P_j^{nw} \qquad \forall j = 1,2,3
+$$
+
+**2. School Capacity Constraints (Total assigned students to each school cannot exceed its capacity):**
+For each school $i$,
+$$
+\sum_{j=1}^3 (x_{ij}^w + x_{ij}^{nw}) \leq S_i \qquad \forall i = 1,2
+$$
+
+**3. Racial Balance Constraints (Each school��s white and nonwhite ratio must be within 10% of the district ratio):**
+
+District ratio: 60% white, 40% nonwhite.
+
+For each school $i$,
+$$
+0.5 \leq
+\frac{\sum_{j=1}^3 x_{ij}^w}{\sum_{j=1}^3 (x_{ij}^w + x_{ij}^{nw})}
+\leq 0.7 \qquad \forall i = 1,2
+$$
+
+**4. Nonnegativity:**
+$$
+x_{ij}^w \geq 0, \quad x_{ij}^{nw} \geq 0 \qquad \forall i = 1,2;\ j = 1,2,3
+$$
+
+---
+
+### Data
+
+**Neighborhood Populations**
+- $P_1^w = 240$_$P_1^{nw} = 80$__(Neighborhood A)
+- $P_2^w = 60$__$P_2^{nw} = 120$_(Neighborhood B)
+- $P_3^w = 180$_$P_3^{nw} = 120$_(Neighborhood C)
+
+**District Ratio** 
+- White: 60%, Nonwhite: 40%
+
+**School Capacities**
+- $S_1 = 600$_(School I)
+- $S_2 = 300$_(School II)
+
+**Distances $d_{ij}$ (in miles)**
+$$
+\mathbf{D} =
+\begin{bmatrix}
+2.4 & 1.8 & 1.5 \\
+1.6 & 4.0 & 0.0
+\end{bmatrix}
+$$
+Where the rows correspond to School I and II, and columns to Neighborhoods A, B, and C.",
+"A fund manager holds a portfolio of 6 assets and is considering using 7 European option types for hedging. Each option__ per-contract cost, delta, gamma, vega, and trading limits are given in OptionCharacteristics.csv. The underlying asset(s) each option refers to is given in Option_AssetReferenceMatrix.csv, with A[i,j]=1 if option i references asset j and 0 otherwise.
+
+Variables: Let x_i be the integer number of contracts (positive for buy/long, negative for sell/short) for option i.
+
+Objective: Minimize total hedging cost: sum_{i=1 to 7} Cost[i] * abs(x_i)
+
+Subject to:
+
+For each Greek G in {Delta, Gamma, Vega}, the net portfolio exposure after hedging must satisfy: |G_initial + sum_{i=1 to 7} sum_{j=1 to 6} G[i] * A[i,j] * x_i| \leq Tolerance_G Where: G_initial is the initial exposure for that Greek (given), G[i] is the per-contract Greek exposure of option i (from OptionCharacteristics.csv), A[i,j] is from Option_AssetReferenceMatrix.csv, Tolerance_G is the band for each risk metric (given).
+
+x_i within its limits (from OptionCharacteristics.csv): MaxShort[i] \leq x_i \leq MaxLong[i]
+
+Data provided:
+
+OptionCharacteristics.csv: Option, referenced Asset, Cost, Delta, Gamma, Vega, MaxLong, MaxShort
+Option_AssetReferenceMatrix.csv: binary matrix showing which option references which asset (A[i,j])
+Initial net Delta=0.25, Gamma=0.08, Vega=0.17
+Risk band tolerances: |Delta| \leq 0.06, |Gamma| \leq 0.05, |Vega| \leq 0.07
+Task: Find the optimal integer position x_i for i=1..7 minimizing total cost, such that all risk exposures after hedging are within their bands, and using the asset-reference information in the constraints.","Large_Scale_Or_Files/Other_example/12/OptionCharacteristics.csv
+Large_Scale_Or_Files/Other_example/12/Option_AssetReferenceMatrix.csv","**Variables:** 
+- $x_i$: Integer number of contracts for option $i$, where $i = 1, \dots, 7$ 
+- $z_i$: Auxiliary variable representing $|x_i|$, where $i = 1, \dots, 7$
+
+**Objective Function:** 
+Minimize total hedging cost: 
+$$
+\min \sum_{i=1}^{7} c_i \cdot z_i
+$$
+where $c_i$ is the cost per contract for option $i$.
+
+Row sums: $S_i = \sum_{j=1}^6 A_{ij} = [1, 1, 1, 1, 1, 1, 1]$
+
+
+**Constraints:** 
+
+1. **Absolute Value Handling** (for $z_i = |x_i|$): 
+$$
+z_i \geq x_i \quad \forall\, i = 1, \dots, 7
+$$
+$$
+z_i \geq -x_i \quad \forall\, i = 1, \dots, 7
+$$
+
+2. **Delta Exposure Constraint** (initial = 0.25, tolerance = 0.06): 
+$$
+-0.06 \leq 0.25 + \sum_{i=1}^{7} \delta_i S_i x_i \leq 0.06
+$$
+
+3. **Gamma Exposure Constraint** (initial = 0.08, tolerance = 0.05): 
+$$
+-0.05 \leq 0.08 + \sum_{i=1}^{7} \gamma_i S_i x_i \leq 0.05
+$$
+
+4. **Vega Exposure Constraint** (initial = 0.17, tolerance = 0.07): 
+$$
+-0.07 \leq 0.17 + \sum_{i=1}^{7} \nu_i S_i x_i \leq 0.07
+$$
+
+5. **Trading Limits:** 
+$$
+-10 \leq x_1 \leq 10
+$$
+$$
+-8 \leq x_2 \leq 8
+$$
+$$
+-7 \leq x_3 \leq 7
+$$
+$$
+-12 \leq x_4 \leq 12
+$$
+$$
+-9 \leq x_5 \leq 9
+$$
+$$
+-7 \leq x_6 \leq 7
+$$
+$$
+-6 \leq x_7 \leq 6
+$$
+
+**Data Vectors/Matrices:** 
+- Cost vector: $$\mathbf{c} = [5, 7, 9, 4, 6, 8, 11]$$ 
+- Delta vector: $$\boldsymbol{\delta} = [0.55,\, -0.45,\, 0.62,\, -0.38,\, 0.47,\, -0.41,\, 0.68]$$ 
+- Gamma vector: $$\boldsymbol{\gamma} = [0.09,\, 0.04,\, 0.11,\, 0.03,\, 0.08,\, 0.06,\, 0.14]$$ 
+- Vega vector: $$\boldsymbol{\nu} = [0.14,\, 0.09,\, 0.11,\, 0.08,\, 0.13,\, 0.15,\, 0.21]$$ 
+- Trading bounds: 
+- Lower bounds: $$\mathbf{l} = [-10, -8, -7, -12, -9, -7, -6]$$ 
+- Upper bounds: $$\mathbf{u} = [10, 8, 7, 12, 9, 7, 6]$$ 
+
+- Asset reference matrix:
+$$
+A = 
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 \\
+0 & 1 & 0 & 0 & 0 & 0 \\
+\end{bmatrix}
+$$",
+"A company operates two factories (Factory A and Factory B) which produce three types of products: P1, P2, and P3. Each product requires three types of resources: labor hours, machine hours, and raw material units. The company must decide how many units of each product to produce at each factory next week to maximize profit.
+
+The resource requirements (per unit of product) for each product at each factory are given in Resource_Requirements.csv. The profit earned (in $) per unit of product at each factory is given in Profit_per_Unit.csv
+
+Each factory has a limited weekly availability of each resource, as follows:
+
+Factory A: 100 labor hours, 90 machine hours, 80 raw material units
+Factory B: 80 labor hours, 100 machine hours, 90 raw material units
+The goal is to determine how many units of P1, P2, and P3 to produce at each factory to maximize profit, without exceeding the resource limits in each factory.","Large_Scale_Or_Files/Other_example/13/Profit_per_Unit.csv
+Large_Scale_Or_Files/Other_example/13/Resource_Requirements.csv","### Linear Programming Formulation: Factory Production Optimization
+
+**Decision Variables:**
+- $x_{A1}$: Units of P1 produced at Factory A 
+- $x_{A2}$: Units of P2 produced at Factory A 
+- $x_{A3}$: Units of P3 produced at Factory A 
+- $x_{B1}$: Units of P1 produced at Factory B 
+- $x_{B2}$: Units of P2 produced at Factory B 
+- $x_{B3}$: Units of P3 produced at Factory B 
+
+All variables are continuous and non-negative ($\geq 0$).
+
+---
+
+**Objective Function (Maximize Profit):**
+
+$$
+\max \quad 12x_{A1} + 16x_{A2} + 10x_{A3} + 15x_{B1} + 14x_{B2} + 11x_{B3}
+$$
+
+---
+
+**Constraints:**
+
+**Factory A Constraints:**
+1. Labor: 
+$$
+2x_{A1} + 4x_{A2} + 3x_{A3} \leq 100
+$$
+2. Machine: 
+$$
+3x_{A1} + 2x_{A2} + 2x_{A3} \leq 90
+$$
+3. Material: 
+$$
+4x_{A1} + 3x_{A2} + 2x_{A3} \leq 80
+$$
+
+**Factory B Constraints:**
+4. Labor: 
+$$
+x_{B1} + 2x_{B2} + 3x_{B3} \leq 80
+$$
+5. Machine: 
+$$
+4x_{B1} + 3x_{B2} + 2x_{B3} \leq 100
+$$
+6. Material: 
+$$
+3x_{B1} + 2x_{B2} + x_{B3} \leq 90
+$$
+
+**Non-negativity Constraints:**
+
+$$
+x_{A1},\ x_{A2},\ x_{A3},\ x_{B1},\ x_{B2},\ x_{B3} \geq 0
+$$",
+"You are a portfolio manager responsible for allocating a $1,000,000 budget among 10 different stocks to maximize the expected return after considering sector limits. You have access to data on expected returns and sector information in stock.csv, and sector membership for each stock in Sector_Mapping.csv. In addition, you are limited to pick at least 3 and at most 8 stocks, and no more than 27% of the budget can be invested in any one sector.","Large_Scale_Or_Files/Other_example/14/stock.csv
+Large_Scale_Or_Files/Other_example/14/Sector_Mapping.csv","**Variables:**
+- $x_i \geq 0$, $x_i \leq \text{MaxInvest}_i$, for $i = 1,\ldots,10$
+where:
+- $\text{MaxInvest}_1 = 250{,}000$
+- $\text{MaxInvest}_2 = 200{,}000$
+- $\text{MaxInvest}_3 = 180{,}000$
+- $\text{MaxInvest}_4 = 240{,}000$
+- $\text{MaxInvest}_5 = 220{,}000$
+- $\text{MaxInvest}_6 = 150{,}000$
+- $\text{MaxInvest}_7 = 130{,}000$
+- $\text{MaxInvest}_8 = 120{,}000$
+- $\text{MaxInvest}_9 = 110{,}000$
+- $\text{MaxInvest}_{10} = 100{,}000$
+- $y_i \in \{0,1\}$, for $i = 1,\ldots,10$
+
+---
+
+**Objective (Maximize):**
+$$
+Z = 0.082 x_1 + 0.073 x_2 + 0.065 x_3 + 0.089 x_4 + 0.076 x_5 + 0.091 x_6 + 0.084 x_7 + 0.068 x_8 + 0.079 x_9 + 0.087 x_{10}
+$$
+
+---
+
+**Subject to:**
+
+**Budget:**
+$$
+x_1 + x_2 + x_3 + x_4 + x_5 + x_6 + x_7 + x_8 + x_9 + x_{10} = 1{,}000{,}000
+$$
+
+**Max investment per stock:**
+$$
+x_1 \leq 250{,}000
+$$
+$$
+x_2 \leq 200{,}000
+$$
+$$
+x_3 \leq 180{,}000
+$$
+$$
+x_4 \leq 240{,}000
+$$
+$$
+x_5 \leq 220{,}000
+$$
+$$
+x_6 \leq 150{,}000
+$$
+$$
+x_7 \leq 130{,}000
+$$
+$$
+x_8 \leq 120{,}000
+$$
+$$
+x_9 \leq 110{,}000
+$$
+$$
+x_{10} \leq 100{,}000
+$$
+
+**Cardinality:**
+$$
+3 \leq y_1 + y_2 + \cdots + y_{10} \leq 8
+$$
+
+**Linking Constraints:**
+$$
+x_i \leq y_i \cdot \text{MaxInvest}_i \quad \forall i=1,\ldots,10
+$$
+
+**Sector Allocations:**
+$$
+x_1 + x_3 + x_7 \leq 270{,}000
+$$
+$$
+x_2 + x_5 + x_{10} \leq 270{,}000
+$$
+$$
+x_4 + x_8 \leq 270{,}000
+$$
+$$
+x_6 + x_9 \leq 270{,}000
+$$
+
+**Domain:**
+$$
+x_i \geq 0, \quad y_i \in \{0,1\}
+$$",
+"A retail company wants to decide where to open warehouses to minimize total costs while meeting the demands of several stores in a region. Each potential warehouse has an opening cost, and there is a known transportation cost for supplying goods to each store from each warehouse. Each warehouse has a capacity, and each store has a specific demand. The potential warehouses costs are in PotentialWarehouses_Costs.csv, demand for each store is in Stores_Demands.csv and the transportation costs c_ij from warehouse i to store j is in TransportationCost.csv
+
+You are to determine which warehouses to open and how to assign the demand of each store to the warehouses such that all store demands are met, warehouse capacities are not exceeded, and the total cost (opening + transportation) is minimized.","Large_Scale_Or_Files/Other_example/15/PotentialWarehouses_Costs.csv
+Large_Scale_Or_Files/Other_example/15/Stores_Demands.csv
+Large_Scale_Or_Files/Other_example/15/TransportationCost.csv","### Facility Location LP Formulation
+
+**Variables:**
+- $x_{i,j}$: Number of units supplied from warehouse $i$ to store $j$ (continuous, $\geq 0$)
+- $y_{i}$: $1$ if warehouse $i$ is opened, $0$ otherwise (binary)
+
+---
+
+**Objective (Minimize total cost):**
+
+$$
+\text{Minimize}\ Z =\ 3000y_1 + 3200y_2 + 3100y_3 + 2800y_4 + 3500y_5 + 2700y_6 + 2900y_7 + 3050y_8 \\
++ (12x_{1,1} + 17x_{1,2} + 13x_{1,3} + 18x_{1,4} + 10x_{1,5} + 15x_{1,6} + 14x_{1,7} + 19x_{1,8}) \\
++ (11x_{2,1} + 19x_{2,2} + 14x_{2,3} + 16x_{2,4} + 13x_{2,5} + 12x_{2,6} + 13x_{2,7} + 16x_{2,8}) \\
++ (14x_{3,1} + 15x_{3,2} + 12x_{3,3} + 17x_{3,4} + 12x_{3,5} + 14x_{3,6} + 15x_{3,7} + 18x_{3,8}) \\
++ (15x_{4,1} + 20x_{4,2} + 14x_{4,3} + 13x_{4,4} + 19x_{4,5} + 16x_{4,6} + 17x_{4,7} + 20x_{4,8}) \\
++ (17x_{5,1} + 18x_{5,2} + 16x_{5,3} + 18x_{5,4} + 15x_{5,5} + 13x_{5,6} + 12x_{5,7} + 17x_{5,8}) \\
++ (13x_{6,1} + 14x_{6,2} + 15x_{6,3} + 17x_{6,4} + 11x_{6,5} + 17x_{6,6} + 13x_{6,7} + 19x_{6,8}) \\
++ (12x_{7,1} + 17x_{7,2} + 11x_{7,3} + 14x_{7,4} + 12x_{7,5} + 16x_{7,6} + 14x_{7,7} + 16x_{7,8}) \\
++ (16x_{8,1} + 15x_{8,2} + 14x_{8,3} + 19x_{8,4} + 14x_{8,5} + 16x_{8,6} + 15x_{8,7} + 18x_{8,8})
+$$
+
+---
+
+**Subject to:**
+
+**Store demand constraints (for each store $j = 1, \ldots, 8$):**
+$$
+\sum_{i=1}^{8} x_{i, j} = d_j
+$$
+where
+$$
+% d_1 = 30 \\
+% d_2 = 40 \\
+% d_3 = 20 \\
+% d_4 = 35 \\
+% d_5 = 20 \\
+% d_6 = 25 \\
+% d_7 = 45 \\
+% d_8 = 38
+d = [30,40,20,35,20,25,45,38]
+$$
+
+**Warehouse capacity constraints (for each warehouse $i = 1, \ldots, 8$):**
+$$
+\sum_{j=1}^{8} x_{i, j} \leq c_i y_i
+$$
+where
+$$
+% c_1 = 180 \\
+% c_2 = 160 \\
+% c_3 = 200 \\
+% c_4 = 150 \\
+% c_5 = 170 \\
+% c_6 = 190 \\
+% c_7 = 160 \\
+% c_8 = 175
+c = [180,160,200,150,170,190,160,175]
+$$
+
+**Domain:**
+$$
+x_{i,j} \geq 0 \quad \text{for all } i, j \\
+y_i \in \{0,1\} \quad \text{for all } i
+$$",
+"A financial institution wants to form a revenue-maximizing portfolio by investing in a selection of 10 structured financial products (e.g., CDOs, CLOs, MBS, etc.). Each product provides a specific expected revenue per unit invested, involves exposure to various risk factors (market, credit, interest rate, etc.), and is subject to upper limits on allocation in ProductCharacteristics_IndividualCaps.csv. The portfolio must satisfy regulatory risk exposure limits for 10 types of risk in RiskFactorLimits.csv, adhere to product-specific allocation caps, and meet a minimum investment guideline in each risk factor.
+
+Your task:
+Maximize expected portfolio revenue while satisfying the diversification/risk constraints and allocation bounds.","Large_Scale_Or_Files/Other_example/16/ProductCharacteristics_IndividualCaps.csv
+Large_Scale_Or_Files/Other_example/16/RiskFactorLimits.csv","Let $\mathbf{x} = [x_1,x_2,\ldots,x_{10}]^\top$ be the vector of investment amounts (in million dollars). 
+Let each constraint coefficient vector be $\mathbf{m}, \mathbf{c}, \mathbf{i}, \mathbf{f}, \mathbf{l}, \mathbf{r}, \mathbf{e}, \mathbf{v}, \mathbf{g}$ as defined below.
+
+---
+
+**Objective:**
+$$
+\text{Maximize} \quad Z = \mathbf{p} \cdot \mathbf{x} = \sum_{i=1}^{10} p_i x_i
+$$
+where $\mathbf{p} = [73,76,65,70,68,75,67,74,69,72]$.
+
+---
+
+**Subject to:**
+
+**Total invested:**
+$$
+\sum_{i=1}^{10} x_i \leq 35
+$$
+
+**Box constraints:**
+$$
+\mathbf{0} \leq \mathbf{x} \leq \mathbf{u}
+$$
+where $\mathbf{u} = [12,8,10,9,7,11,8,10,9,12]$.
+
+---
+
+**Risk factor limits (all written as vector dot products):**
+
+- Market Risk:
+$$
+\mathbf{m} \cdot \mathbf{x} \leq 42
+$$
+where $\mathbf{m} = [5.1,6.0,3.8,5.3,4.8,6.7,4.0,5.8,4.7,5.6]$
+
+- Credit Risk:
+$$
+\mathbf{c} \cdot \mathbf{x} \leq 50
+$$
+where $\mathbf{c} = [6.2,7.1,5.7,6.4,6.1,6.5,5.8,6.3,6.0,6.6]$
+
+- Interest Rate Risk:
+$$
+\mathbf{i} \cdot \mathbf{x} \leq 29
+$$
+where $\mathbf{i} = [3.4,3.8,2.9,3.2,3.1,4.1,3.0,3.7,3.3,3.5]$
+
+- FX Risk:
+$$
+\mathbf{f} \cdot \mathbf{x} \leq 39
+$$
+where $\mathbf{f} = [4.2,4.6,3.4,4.8,4.0,5.1,3.7,4.9,4.1,4.5]$
+
+- Liquidity Risk:
+$$
+\mathbf{l} \cdot \mathbf{x} \leq 25
+$$
+where $\mathbf{l} = [2.8,2.6,2.4,3.3,2.9,3.7,2.5,3.0,2.8,2.7]$
+
+- IR Risk:
+$$
+\mathbf{r} \cdot \mathbf{x} \leq 49
+$$
+where $\mathbf{r} = [5.9,4.8,6.2,5.1,4.9,6.3,5.6,6.1,5.2,5.4]$
+
+- Equity Risk:
+$$
+\mathbf{e} \cdot \mathbf{x} \leq 25
+$$
+where $\mathbf{e} = [2.7,2.5,2.2,2.6,2.3,3.0,2.4,2.9,2.7,2.8]$
+
+- Volatility:
+$$
+\mathbf{v} \cdot \mathbf{x} \leq 36
+$$
+where $\mathbf{v} = [4.5,5.1,3.9,4.8,4.4,5.4,4.0,5.0,4.3,4.7]$
+
+- Regulatory Risk:
+$$
+\mathbf{g} \cdot \mathbf{x} \leq 27
+$$
+where $\mathbf{g} = [2.2,3.0,2.7,2.5,2.4,3.3,2.6,3.2,2.3,2.8]$
+
+---
+
+**Domain:**
+$$
+x_i \geq 0 \quad \text{for all } i = 1, \ldots, 10
+$$",
+"A factory processes three types of components: A, B, and C. The unit time required in the rough processing, fine processing, and packaging is in processing_time_unit.csv, the unit price of each component is in unit_price.csv, and the total time limits for each workshop is shown in total_working_hours.csv. How should production be arranged to achieve maximum total output value?","Large_Scale_Or_Files/Other_example/17/processing_time_unit.csv
+Large_Scale_Or_Files/Other_example/17/unit_price.csv
+Large_Scale_Or_Files/Other_example/17/total_working_hours.csv","### Linear Programming Model
+
+**Objective:**
+$$
+\max\ Z = 30x_1 + 20x_2 + 50x_3
+$$
+
+**Subject to:**
+$$
+\begin{align*}
+x_1 + 2x_2 + x_3 &\leq 430 \\
+3x_1 + 2x_3 &\leq 460 \\
+x_1 + 4x_2 &\leq 420 \\
+x_1 \geq 0,\quad x_2 \geq 0,\quad x_3 \geq 0
+\end{align*}
+$$",
+"A bank is planning its loan allocation strategy across 7 different industry sectors (S1, S2, S3, S4, S5, S6, S7). Within each of these sectors, the bank can provide loans across up to 6 loan types, labeled L1 through L6 (for example: Short-Term, Medium-Term, Long-Term, Consumer, SME, and Real Estate).
+
+The bank has the following data, organized in three separate CSV tables:
+
+ProjectedInterestIncome.csv:
+Each cell represents the expected interest income earned per million dollars invested in a given combination of sector and loan type (sector *loan type).
+
+RiskWeight.csv:
+Each cell shows the estimated risk weight associated with lending one million dollars in the corresponding combination of sector and loan type.
+(Risk weights reflect factors such as the financial health of the sector, characteristics of the loan type, and current macroeconomic trends.)
+
+LendingAllocationCaps.csv:
+Each cell indicates the maximum allowable allocation (in millions of dollars) that can be lent in each combination of industry sector and loan type.
+
+The bank wants to determine a lending allocation plan across the sectors and loan types to maximize the total expected interest income while:
+Do not exceeding the per-loan-type allocation (per sector) caps;
+Total risk-weighted exposure must stay below a regulatory cap: Total risk-weighted exposure cap: $14.0$;
+Minimum lending requirement: The total lending across all sectors and loan types must be at least $30 million;
+All allocations must be in integer millions.","Large_Scale_Or_Files/Other_example/18/ProjectedInterestIncome.csv
+Large_Scale_Or_Files/Other_example/18/RiskWeight.csv
+Large_Scale_Or_Files/Other_example/18/LendingAllocationCaps.csv","### 1. Interest Rates Matrix $\boldsymbol{A} = [a_{ij}]$ (income per million lent)
+$$
+\mathbf{A} =
+\begin{bmatrix}
+46 & 38 & 41 & 43 & 40 & 37 & 45 \\
+44 & 39 & 43 & 41 & 39 & 38 & 41 \\
+47 & 36 & 40 & 45 & 42 & 34 & 43 \\
+42 & 40 & 41 & 42 & 43 & 39 & 44 \\
+48 & 38 & 38 & 44 & 43 & 37 & 46 \\
+46 & 37 & 42 & 41 & 41 & 35 & 45
+\end{bmatrix}
+$$
+
+---
+
+### 2. Risk Coefficients Matrix $\boldsymbol{R} = [r_{ij}]$ (risk per million lent)
+$$
+\mathbf{R} =
+\begin{bmatrix}
+0.13 & 0.12 & 0.17 & 0.10 & 0.14 & 0.13 & 0.18 \\
+0.11 & 0.12 & 0.16 & 0.13 & 0.13 & 0.11 & 0.17 \\
+0.15 & 0.13 & 0.19 & 0.13 & 0.15 & 0.14 & 0.18 \\
+0.12 & 0.15 & 0.15 & 0.12 & 0.13 & 0.13 & 0.15 \\
+0.18 & 0.13 & 0.21 & 0.16 & 0.19 & 0.13 & 0.20 \\
+0.14 & 0.15 & 0.14 & 0.15 & 0.15 & 0.12 & 0.14
+\end{bmatrix}
+$$
+
+---
+
+### 3. Lending Caps Matrix $\boldsymbol{C} = [c_{ij}]$ (max million per lender-sector)
+$$
+\mathbf{C} =
+\begin{bmatrix}
+7 & 5 & 4 & 8 & 6 & 5 & 7 \\
+6 & 7 & 5 & 7 & 6 & 4 & 5 \\
+5 & 6 & 6 & 6 & 5 & 5 & 4 \\
+8 & 5 & 7 & 8 & 6 & 6 & 5 \\
+7 & 6 & 6 & 7 & 7 & 4 & 5 \\
+6 & 5 & 5 & 7 & 5 & 7 & 6
+\end{bmatrix}
+$$
+
+---
+
+### 4. **Global Constraints**
+- Max Total Risk: $R_{\max} = 14.0$
+- Min Total Lending: $L_{\min} = 30$
+
+---
+
+#### **Decision Variables**
+- $x_{ij} \in \mathbb{Z}_+$ : Amount lent (in million) by lender $i$ to sector $j$.
+
+---
+
+#### **Objective Function**
+
+Maximize total interest income:
+$$
+\max \sum_{i=1}^{6} \sum_{j=1}^{7} a_{ij}\, x_{ij}
+$$
+
+---
+
+#### **Constraints**
+
+1. **Lending Capacity** (per lender-sector pair):
+$$
+x_{ij} \leq c_{ij} \qquad \forall i \in \{1,\dots,6\},\ j \in \{1,\dots,7\}
+$$
+
+2. **Total Risk Limit**:
+$$
+\sum_{i=1}^{6} \sum_{j=1}^{7} r_{ij} x_{ij} \leq 14.0
+$$
+
+3. **Minimum Total Lending**:
+$$
+\sum_{i=1}^{6} \sum_{j=1}^{7} x_{ij} \geq 30
+$$
+
+4. **Non-negativity and Integrality:**
+$$
+x_{ij} \geq 0,\quad x_{ij} \in \mathbb{Z} \qquad \forall i, j
+$$
+
+---
+
+### **Key Properties**
+- **Total Variables:** $6 \times 7 = 42$
+- **Total Constraints:**
+- 42 capacity constraints (one per $x_{ij}$)
+- 1 risk constraint
+- 1 lending constraint
+- **Total:** 44 constraints
+- **Solution Type:** Integer Linear Programming (ILP)",
+"A company is planning a digital marketing campaign for 5 products (P1, P2, P3, P4, P5) targeted to 7 distinct user groups (U1, U2, U3, U4, U5, U6, U7). Given the following data (provided in CSV files):
+
+ConversionRate.csv: Predicted conversion probability from exposure to purchase for every [Product, User Group] combination.
+CostperExposure.csv: Cost incurred per exposure for each [Product, User Group] combination in dollars.
+BrandFitScore.csv: Brand fit score (decimal) for each (Product, UserGroup) pair. Score indicating how well each product matches each user group's preferences.
+ExposureCaps(per User Group).csv: Maximum exposures allowed for each (Product, UserGroup) pair (hard cap per pair).
+ProductMinExposures.csv: The minimum total exposure of each product. The total exposure of a product should be the sum of the exposure of all 7 user groups.
+To avoid spamming, each user group has a maximum number of exposures they can receive across all products. Each product has a minimum campaign exposure requirement for market presence, and the average brand fit across all exposures must not be below a set target. ExposureCaps(per User Group).csv states the information of risk exposure of each product of each user group; ProductMinExposure.csv shows the minimum exposure requirement of each product. User group exposures for each product cannot exceed the value in the cell of ExposureCaps(per User Group).csv. Each product must have at least the ""Product min exposures"" across all groups in ProductMinExposures.csv.
+
+Total marketing budget: $2,100 (i.e., exposures *cost must not exceed this sum)
+Average brand fit (across all exposures) must be at least 0.75.
+All exposures must be integers (send whole exposures).
+
+Goal:
+Choose the number of exposures for every product-user group pair to maximize expected conversion probabilities, under all constraints.","Large_Scale_Or_Files/Other_example/19/ConversionRate.csv
+Large_Scale_Or_Files/Other_example/19/CostperExposure.csv
+Large_Scale_Or_Files/Other_example/19/BrandFitScore.csv
+Large_Scale_Or_Files/Other_example/19/ExposureCaps(perUserGroup).csv
+Large_Scale_Or_Files/Other_example/19/ProductMinExposures.csv","### Mathematical Formulation
+
+**Sets:** 
+- $i \in \{1,2,3,4,5\}$: Products (P1 to P5) 
+- $j \in \{1,2,3,4,5,6,7\}$: User groups (U1 to U7) 
+
+**Decision Variables:** 
+- $x_{ij} \in \mathbb{Z}_+$: Number of exposures of product $i$ to user group $j$ 
+
+---
+
+**Objective Function:** 
+Maximize total expected conversions: 
+$$
+\max \sum_{i=1}^{5} \sum_{j=1}^{7} r_{ij} \cdot x_{ij}
+$$ 
+where $r_{ij}$ = conversion rate for (product $i$, user group $j$) 
+
+---
+
+**Constraints:** 
+
+1. **Exposure Caps** (per product-user group pair): 
+$$
+x_{ij} \leq c^{\text{cap}}_{ij} \quad \forall i,j
+$$ 
+
+2. **Total Budget Limit**: 
+$$
+\sum_{i=1}^{5} \sum_{j=1}^{7} c^{\text{cost}}_{ij} \cdot x_{ij} \leq 2100
+$$ 
+
+3. **Minimum Exposures per Product**: 
+$$
+\sum_{j=1}^{7} x_{ij} \geq p_i \quad \forall i
+$$ 
+where $p_i$ = minimum exposures for product $i$ 
+
+4. **Average Brand Fit**: 
+$$
+\sum_{i=1}^{5} \sum_{j=1}^{7} b_{ij} \cdot x_{ij} \geq 0.75 \cdot \left( \sum_{i=1}^{5} \sum_{j=1}^{7} x_{ij} \right)
+$$ 
+
+5. **Non-negativity and Integrality**: 
+$$
+x_{ij} \geq 0 \text{ and integer} \quad \forall i,j
+$$ 
+
+---
+
+### Coefficient Matrices
+
+#### 1. Conversion Rates ($r_{ij}$):
+
+$$
+\mathbf{R} = \begin{bmatrix}
+0.12 & 0.10 & 0.11 & 0.13 & 0.09 & 0.10 & 0.10 \\
+0.15 & 0.13 & 0.12 & 0.09 & 0.12 & 0.08 & 0.11 \\
+0.09 & 0.14 & 0.16 & 0.11 & 0.11 & 0.13 & 0.09 \\
+0.07 & 0.15 & 0.12 & 0.13 & 0.14 & 0.13 & 0.13 \\
+0.11 & 0.13 & 0.13 & 0.12 & 0.13 & 0.10 & 0.14
+\end{bmatrix}
+$$
+
+#### 2. Costs per Exposure ($c^{\text{cost}}_{ij}$) (\$):
+
+$$
+\mathbf{C}_{\text{cost}} = \begin{bmatrix}
+7 & 6 & 9 & 8 & 8 & 7 & 7 \\
+9 & 7 & 7 & 7 & 9 & 8 & 8 \\
+8 & 8 & 10 & 8 & 9 & 8 & 7 \\
+6 & 7 & 9 & 7 & 7 & 8 & 9 \\
+8 & 6 & 7 & 9 & 8 & 6 & 10
+\end{bmatrix}
+$$
+
+#### 3. Brand Fit Scores ($b_{ij}$):
+
+$$
+\mathbf{B} = \begin{bmatrix}
+0.75 & 0.68 & 0.72 & 0.80 & 0.65 & 0.70 & 0.73 \\
+0.80 & 0.75 & 0.80 & 0.70 & 0.78 & 0.74 & 0.81 \\
+0.65 & 0.78 & 0.82 & 0.76 & 0.74 & 0.79 & 0.69 \\
+0.60 & 0.85 & 0.69 & 0.80 & 0.83 & 0.76 & 0.77 \\
+0.81 & 0.73 & 0.75 & 0.78 & 0.83 & 0.68 & 0.88
+\end{bmatrix}
+$$
+
+#### 4. Exposure Caps ($c^{\text{cap}}_{ij}$):
+
+$$
+\mathbf{C}_{\text{cap}} = \begin{bmatrix}
+10 & 8 & 12 & 9 & 7 & 10 & 11 \\
+11 & 9 & 10 & 12 & 8 & 9 & 8 \\
+7 & 10 & 13 & 8 & 12 & 11 & 7 \\
+8 & 9 & 8 & 10 & 12 & 7 & 8 \\
+12 & 7 & 8 & 9 & 11 & 10 & 13
+\end{bmatrix}
+$$
+
+#### 5. Minimum Exposures per Product ($p_i$):
+
+$$
+\mathbf{p} = \begin{bmatrix}
+15 \\ 16 \\ 20 \\ 14 \\ 17
+\end{bmatrix}
+$$",
+"A farm has 100 hectares of land, 15,000 yuan of capital, and a labor force of 3,500 person-days in autumn/winter and 4,000 person-days in spring/summer.
+
+The farm plans to:
+_ Plant soybeans, corn, and wheat, which require land and labor but no additional capital investment.
+_ Raise cows (costing 400 yuan each, using 1.5 hectares of land, and requiring 100 person-days in autumn/winter and 50 in spring/summer).
+_ Raise chickens (costing 3 yuan each, requiring no land, and needing 0.6 and 0.3 person-days in the two seasons, respectively).
+
+The farm infrastructure limits herd size to 32 cows and 3,000 chickens.
+Any unused labor can work externally, earning 1.8 yuan/person-day in autumn/winter and 2.1 yuan/person-day in spring/summer.
+
+The labor requirements and net income (per hectare per year) for the crops are: are shown in 2.csv.
+Decide the planting areas, number of cows and chickens to raise, and surplus labor allocated to external work, to maximize total annual net income, including crop and livestock profits, less animal costs, plus earnings from external work.",Large_Scale_Or_Files/Other_example/2.csv,"$$
+\max Z = 175 x_s + 300 x_c + 120 x_w - 400 y_b - 3 y_h + 1.8 e_{aw} + 2.1 e_{ss}
+$$
+
+$$
+x_s + x_c + x_w + 1.5 y_b \leq 100
+$$
+
+$$
+400 y_b + 3 y_h \leq 15,000
+$$
+
+$$
+20 x_s + 35 x_c + 10 x_w + 100 y_b + 0.6 y_h + e_{aw} = 3,500
+$$
+
+$$
+50 x_s + 75 x_c + 40 x_w + 50 y_b + 0.3 y_h + e_{ss} = 4,000
+$$
+
+$$
+y_b \leq 32
+$$
+
+$$
+y_h \leq 3,000
+$$
+
+$$
+x_s, x_c, x_w, y_b, y_h, e_{aw}, e_{ss} \geq 0, y_b \in Z, y_h \in Z
+$$",
+"A convenience store plans to open several chain stores in a new residential area in the northwest suburbs of the city. To facilitate shopping, the distance from any residential area to one of the chain stores should not exceed $800 \mathrm{~m}$. 5.csv gives the newly built residential areas and the various areas within a radius of $800 \mathrm{~m}$ of each residential area. How many chain stores should the supermarket build in the above-mentioned areas and in which areas should they be built?",Large_Scale_Or_Files/Other_example/5.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+y_A + y_B + y_C + y_D + y_E + y_F + y_G + y_H + y_I + y_J + y_K + y_L
+$$
+
+**subject to**
+
+$$
+y_A + y_C + y_E + y_G + y_H + y_I \geq 1 \quad (\text{cover A})
+$$
+
+$$
+y_B + y_H + y_I \geq 1 \quad (\text{cover B})
+$$
+
+$$
+y_A + y_C + y_G + y_H + y_I \geq 1 \quad (\text{cover C})
+$$
+
+$$
+y_D + y_J \geq 1 \quad (\text{cover D})
+$$
+
+$$
+y_A + y_E + y_G \geq 1 \quad (\text{cover E})
+$$
+
+$$
+y_F + y_J + y_K \geq 1 \quad (\text{cover F})
+$$
+
+$$
+y_A + y_C + y_E + y_G \geq 1 \quad (\text{cover G})
+$$
+
+$$
+y_A + y_B + y_C + y_H + y_I \geq 1 \quad (\text{cover H})
+$$
+
+$$
+y_A + y_B + y_C + y_H + y_I \geq 1 \quad (\text{cover I})
+$$
+
+$$
+y_D + y_F + y_J + y_K + y_L \geq 1 \quad (\text{cover J})
+$$
+
+$$
+y_F + y_J + y_K + y_L \geq 1 \quad (\text{cover K})
+$$
+
+$$
+y_J + y_K + y_L \geq 1 \quad (\text{cover L})
+$$
+
+**where**
+
+$$
+y_i \in \{0,1\}, \quad i \in \{A, B, C, D, E, F, G, H, I, J, K, L\}
+$$",
+"A product can be processed on any one of the four devices A, B, C, or D. The setup completion cost for each device when it is activated, the unit cost of production for the product, and the maximum processing capacity for each device are known as shown in 6.csv. How can the total cost be minimized to produce 2000 units of the product? Try to establish a mathematical model.",Large_Scale_Or_Files/Other_example/6.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+1000\, y_A + 20\, x_A 
++ 920\, y_B + 24\, x_B 
++ 800\, y_C + 16\, x_C 
++ 700\, y_D + 28\, x_D
+$$
+
+**subject to**
+
+$$
+x_A + x_B + x_C + x_D = 2000
+$$
+
+$$
+x_A \leq 900\, y_A
+$$
+
+$$
+x_B \leq 1000\, y_B
+$$
+
+$$
+x_C \leq 1200\, y_C
+$$
+
+$$
+x_D \leq 1600\, y_D
+$$
+
+**where**
+
+$$
+x_A, x_B, x_C, x_D \geq 0 \quad (\text{continuous})
+$$
+
+$$
+y_A, y_B, y_C, y_D \in \{0,1\} \quad (\text{binary})
+$$",
+"A factory plans to produce three types of products, I, II, and III, which require processing on devices A, B, and C, respectively. The data is shown in 8.csv.
+How can the factory fully utilize the capacity of the devices to maximize profit?",Large_Scale_Or_Files/Other_example/8.csv,"## Mathematical Model
+
+**Maximize**
+
+$$
+3\, x_1 + 2\, x_2 + 2.9\, x_3
+$$
+
+**subject to**
+
+$$
+8\, x_1 + 2\, x_2 + 10\, x_3 \leq 300 \quad (\text{Device A capacity})
+$$
+
+$$
+10\, x_1 + 5\, x_2 + 8\, x_3 \leq 400 \quad (\text{Device B capacity})
+$$
+
+$$
+2\, x_1 + 13\, x_2 + 10\, x_3 \leq 420 \quad (\text{Device C capacity})
+$$
+
+**where**
+
+$$
+x_1, x_2, x_3 \geq 0 \quad (\text{continuous})
+$$",
+"The number of drivers and crew members required for each time period of a certain day and night service bus route is shown in 9.csv.
+
+Assuming the drivers and crew members start working at the beginning of each time period and work continuously for eight hours, how many drivers and crew members should be equipped for this bus route at least? Provide the linear programming model for this problem.",Large_Scale_Or_Files/Other_example/9.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+x_1 + x_2 + x_3 + x_4 + x_5 + x_6
+$$
+
+**subject to**
+
+$$
+x_1 + x_6 \geq 60 \quad (\text{shift 1 requirement})
+$$
+
+$$
+x_1 + x_2 \geq 70 \quad (\text{shift 2 requirement})
+$$
+
+$$
+x_2 + x_3 \geq 60 \quad (\text{shift 3 requirement})
+$$
+
+$$
+x_3 + x_4 \geq 50 \quad (\text{shift 4 requirement})
+$$
+
+$$
+x_4 + x_5 \geq 20 \quad (\text{shift 5 requirement})
+$$
+
+$$
+x_5 + x_6 \geq 30 \quad (\text{shift 6 requirement})
+$$
+
+**where**
+
+$$
+x_1, x_2, x_3, x_4, x_5, x_6 \geq 0 \quad (\text{integer})
+$$",
+"Now we need to determine 4 out of 5 workers to each complete one of the four tasks. Since each worker has different skill sets, the amount of time required for each worker to complete each task is also different. The time required for each worker to complete each task is shown in 15.csv.
+
+Try to find a work assignment plan that minimizes the total working hours.",Large_Scale_Or_Files/Other_example/15.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+9\, x_{1A} + 4\, x_{1B} + 3\, x_{1C} + 7\, x_{1D}
++ 4\, x_{2A} + 6\, x_{2B} + 5\, x_{2C} + 6\, x_{2D}
++ 5\, x_{3A} + 4\, x_{3B} + 7\, x_{3C} + 5\, x_{3D}
++ 7\, x_{4A} + 5\, x_{4B} + 2\, x_{4C} + 3\, x_{4D}
++10\, x_{5A} + 6\, x_{5B} + 7\, x_{5C} + 4\, x_{5D}
+$$
+
+**subject to**
+
+$$
+x_{1A} + x_{2A} + x_{3A} + x_{4A} + x_{5A} = 1 
+\quad (\text{task A assigned})
+$$
+
+$$
+x_{1B} + x_{2B} + x_{3B} + x_{4B} + x_{5B} = 1 
+\quad (\text{task B assigned})
+$$
+
+$$
+x_{1C} + x_{2C} + x_{3C} + x_{4C} + x_{5C} = 1 
+\quad (\text{task C assigned})
+$$
+
+$$
+x_{1D} + x_{2D} + x_{3D} + x_{4D} + x_{5D} = 1 
+\quad (\text{task D assigned})
+$$
+
+$$
+x_{1A} + x_{1B} + x_{1C} + x_{1D} \leq 1 
+\quad (\text{worker I at most one task})
+$$
+
+$$
+x_{2A} + x_{2B} + x_{2C} + x_{2D} \leq 1 
+\quad (\text{worker II at most one task})
+$$
+
+$$
+x_{3A} + x_{3B} + x_{3C} + x_{3D} \leq 1 
+\quad (\text{worker III at most one task})
+$$
+
+$$
+x_{4A} + x_{4B} + x_{4C} + x_{4D} \leq 1 
+\quad (\text{worker IV at most one task})
+$$
+
+$$
+x_{5A} + x_{5B} + x_{5C} + x_{5D} \leq 1 
+\quad (\text{worker V at most one task})
+$$
+
+$$
+x_{1A} + x_{1B} + x_{1C} + x_{1D}
++ x_{2A} + x_{2B} + x_{2C} + x_{2D}
++ x_{3A} + x_{3B} + x_{3C} + x_{3D}
++ x_{4A} + x_{4B} + x_{4C} + x_{4D}
++ x_{5A} + x_{5B} + x_{5C} + x_{5D} = 4
+\quad (\text{total 4 assignments})
+$$
+
+**where**
+
+$$
+x_{ij} \in \{0,1\}, 
+\quad i = 1,\ldots,5 \ (\text{workers}), 
+\quad j = A,\ldots,D \ (\text{tasks})
+$$",
+"""There are 7 tasks that must be run on 3 CPUs, with frequencies of 1.33, 2, and $2.66 \mathrm{GHz}$ respectively (each processor can only run one task at a time). The basic instructions (in billions of instructions, BI) for each task are stored in 18.csv
+
+Arrange the tasks onto the processors to minimize the completion time of the last task. Use COPTPY to solve the problem.""",Large_Scale_Or_Files/Other_example/18.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+C_{\max}
+$$
+
+**subject to**
+
+$$
+x_{1,1} + x_{2,1} + x_{3,1} = 1 \quad (\text{task 1 assigned})
+$$
+
+$$
+x_{1,2} + x_{2,2} + x_{3,2} = 1 \quad (\text{task 2 assigned})
+$$
+
+$$
+x_{1,3} + x_{2,3} + x_{3,3} = 1 \quad (\text{task 3 assigned})
+$$
+
+$$
+x_{1,4} + x_{2,4} + x_{3,4} = 1 \quad (\text{task 4 assigned})
+$$
+
+$$
+x_{1,5} + x_{2,5} + x_{3,5} = 1 \quad (\text{task 5 assigned})
+$$
+
+$$
+x_{1,6} + x_{2,6} + x_{3,6} = 1 \quad (\text{task 6 assigned})
+$$
+
+$$
+x_{1,7} + x_{2,7} + x_{3,7} = 1 \quad (\text{task 7 assigned})
+$$
+
+**CPU time constraints**
+
+$$
+\frac{1.1}{1.33}x_{1,1} + \frac{2.1}{1.33}x_{1,2} + \frac{3}{1.33}x_{1,3}
++ \frac{1}{1.33}x_{1,4} + \frac{0.7}{1.33}x_{1,5} + \frac{5}{1.33}x_{1,6}
++ \frac{3}{1.33}x_{1,7} \leq C_{\max}
+\quad (\text{CPU 1 time})
+$$
+
+$$
+\frac{1.1}{2}x_{2,1} + \frac{2.1}{2}x_{2,2} + \frac{3}{2}x_{2,3}
++ \frac{1}{2}x_{2,4} + \frac{0.7}{2}x_{2,5} + \frac{5}{2}x_{2,6}
++ \frac{3}{2}x_{2,7} \leq C_{\max}
+\quad (\text{CPU 2 time})
+$$
+
+$$
+\frac{1.1}{2.66}x_{3,1} + \frac{2.1}{2.66}x_{3,2} + \frac{3}{2.66}x_{3,3}
++ \frac{1}{2.66}x_{3,4} + \frac{0.7}{2.66}x_{3,5} + \frac{5}{2.66}x_{3,6}
++ \frac{3}{2.66}x_{3,7} \leq C_{\max}
+\quad (\text{CPU 3 time})
+$$
+
+**where**
+
+$$
+x_{i,j} \in \{0,1\} 
+\quad (\text{binary, indicates if task } j \text{ assigned to CPU } i)
+$$
+
+$$
+C_{\max} \geq 0 
+\quad (\text{continuous, completion time})
+$$",
+"A traveling salesman must visit 7 customers at 7 different locations, and the (symmetric) distance matrix is restored in 20.csv file.
+Develop a mathematical program to determine the visiting order starting from location 1 and ending at location 1, in order to minimize the traveling distance, and solve it using COPTPY.",Large_Scale_Or_Files/Other_example/20.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+\sum_{i=1}^7 \sum_{\substack{j=1 \\ j \neq i}}^7 d_{i,j} \, x_{i,j}
+$$
+
+**subject to**
+
+$$
+\sum_{\substack{j=1 \\ j \neq i}}^7 x_{i,j} = 1 
+\quad \text{for all } i = 1,\ldots,7 
+\quad (\text{leave each city once})
+$$
+
+$$
+\sum_{\substack{i=1 \\ i \neq j}}^7 x_{i,j} = 1 
+\quad \text{for all } j = 1,\ldots,7 
+\quad (\text{enter each city once})
+$$
+
+**MTZ subtour elimination constraints**
+
+$$
+u_i - u_j + 7\, x_{i,j} \leq 6 
+\quad \text{for all } i,j = 2,\ldots,7,\ i \neq j
+$$
+
+**where**
+
+$$
+x_{i,j} \in \{0,1\} 
+\quad \text{for all } i \neq j
+\quad (\text{binary, traveling from } i \text{ to } j)
+$$
+
+$$
+u_i \in [2,7]
+\quad \text{for } i = 2,\ldots,7
+\quad (\text{continuous MTZ ordering variables})
+$$",
+"A certain brand of wine is made by blending three grades of wine. The daily supply and unit cost of these three grades of wine are shown in 30-1.csv.
+
+
+Assume that there are three brands (red, yellow, blue) for this type of wine, and the blending ratios and selling prices for each brand are shown in 30-2.csv. The decision maker specifies that the wines for each brand must be blended strictly according to the specified ratios, followed by maximizing profit, and ensuring that the red brand produces at least 2000 kg per day. Formulate the mathematical model.","Large_Scale_Or_Files/Other_example/30-1.csv
+Large_Scale_Or_Files/Other_example/30-2.csv","## Mathematical Model
+
+**Maximize**
+
+$$
+5.5\, (x_{R1} + x_{R2} + x_{R3})
++ 5.0\, (x_{Y1} + x_{Y2} + x_{Y3})
++ 4.8\, (x_{B1} + x_{B2} + x_{B3})
+- 6\, (x_{R1} + x_{Y1} + x_{B1})
+- 4.5\, (x_{R2} + x_{Y2} + x_{B2})
+- 3\, (x_{R3} + x_{Y3} + x_{B3})
+$$
+
+**subject to**
+
+$$
+x_{R1} + x_{Y1} + x_{B1} \leq 1500 
+\quad (\text{Grade I supply limit})
+$$
+
+$$
+x_{R2} + x_{Y2} + x_{B2} \leq 2000 
+\quad (\text{Grade II supply limit})
+$$
+
+$$
+x_{R3} + x_{Y3} + x_{B3} \leq 1000 
+\quad (\text{Grade III supply limit})
+$$
+
+**Brand Red constraints**
+
+$$
+x_{R1} \leq 0.10\, (x_{R1} + x_{R2} + x_{R3}) 
+\quad (\text{Red: Grade I < 10\%})
+$$
+
+$$
+x_{R2} \geq 0.50\, (x_{R1} + x_{R2} + x_{R3}) 
+\quad (\text{Red: Grade II > 50\%})
+$$
+
+**Brand Yellow constraints**
+
+$$
+x_{Y3} \leq 0.70\, (x_{Y1} + x_{Y2} + x_{Y3}) 
+\quad (\text{Yellow: Grade III < 70\%})
+$$
+
+$$
+x_{Y1} \geq 0.20\, (x_{Y1} + x_{Y2} + x_{Y3}) 
+\quad (\text{Yellow: Grade I > 20\%})
+$$
+
+**Brand Blue constraints**
+
+$$
+x_{B1} \leq 0.50\, (x_{B1} + x_{B2} + x_{B3}) 
+\quad (\text{Blue: Grade I < 50\%})
+$$
+
+$$
+x_{B2} \geq 0.10\, (x_{B1} + x_{B2} + x_{B3}) 
+\quad (\text{Blue: Grade II > 10\%})
+$$
+
+**Minimum production constraint**
+
+$$
+(x_{R1} + x_{R2} + x_{R3}) \geq 2000 
+\quad (\text{Red brand minimum production})
+$$
+
+**where**
+
+$$
+x_{ij} \geq 0 
+\quad \text{for } 
+i \in \{R, Y, B\} 
+\ (\text{brands: Red, Yellow, Blue}),
+\quad 
+j \in \{1,2,3\} 
+\ (\text{grades: I, II, III})
+$$",
+"A product consists of three components, which are produced by four workshops. The total number of production hours available for each workshop is limited. 31.csv shows the productivity of the three components. The objective is to determine how many hours should be allocated to each component in each workshop in order to maximize the number of completed products. Represent this problem as a linear programming problem.",Large_Scale_Or_Files/Other_example/31.csv,"## Mathematical Model
+
+**Maximize**
+
+$$
+N
+$$
+
+**subject to**
+
+$$
+x_{A1} + x_{A2} + x_{A3} \leq 100 
+\quad (\text{workshop A hours})
+$$
+
+$$
+x_{B1} + x_{B2} + x_{B3} \leq 150 
+\quad (\text{workshop B hours})
+$$
+
+$$
+x_{C1} + x_{C2} + x_{C3} \leq 80 
+\quad (\text{workshop C hours})
+$$
+
+$$
+x_{D1} + x_{D2} + x_{D3} \leq 200 
+\quad (\text{workshop D hours})
+$$
+
+**component requirements**
+
+$$
+10\, x_{A1} + 15\, x_{B1} + 20\, x_{C1} + 10\, x_{D1} \geq N 
+\quad (\text{component 1})
+$$
+
+$$
+15\, x_{A2} + 10\, x_{B2} + 5\, x_{C2} + 15\, x_{D2} \geq N 
+\quad (\text{component 2})
+$$
+
+$$
+5\, x_{A3} + 5\, x_{B3} + 10\, x_{C3} + 20\, x_{D3} \geq N 
+\quad (\text{component 3})
+$$
+
+**where**
+
+$$
+x_{wc} \geq 0 
+\quad \text{for all } 
+w \in \{A,B,C,D\},\, 
+c \in \{1,2,3\}
+$$
+
+$$
+N \geq 0 
+\quad (\text{number of completed products})
+$$",
+"A company plans to produce three products A_{1}, A_{2}, A_{3}. It can produce for 22 days in a month. The 36-1.csv file gives the maximum demand (in units of 100 kg), prices ($/100 kg), production costs (per 100 kg of product), and production quotas (the maximum number of units of 100 kg of product that can be produced in a day if all production lines are dedicated to that product).
+
+The fixed activation cost for each production line is shown in 36-2.csv.
+
+The minimum production batch sizes are shown in 36-3.csv.
+
+The objective is to determine the production plan that maximizes total profit, accounting for total revenue, production costs, fixed activation costs, and minimum batch size restrictions.
+
+Furthermore, we only consider integer decision variables, meaning the quantities of products produced are integer multiples of 100 kg. The binary decisions on whether to activate each production line are also integer (0 or 1).","Large_Scale_Or_Files/Other_example/36-1.csv
+Large_Scale_Or_Files/Other_example/36-2.csv
+Large_Scale_Or_Files/Other_example/36-3.csv","## Mathematical Model
+
+**Maximize**
+
+$$
+50.7\, x_1 - 170{,}000\, y_1 
++ 56.1\, x_2 - 150{,}000\, y_2 
++ 49.6\, x_3 - 100{,}000\, y_3
+$$
+
+**subject to**
+
+$$
+x_1 \leq 5300 
+\quad (\text{product 1 demand})
+$$
+
+$$
+x_2 \leq 4500 
+\quad (\text{product 2 demand})
+$$
+
+$$
+x_3 \leq 5400 
+\quad (\text{product 3 demand})
+$$
+
+$$
+x_1 \leq 11{,}000 
+\quad (\text{product 1 monthly quota})
+$$
+
+$$
+x_2 \leq 9{,}900 
+\quad (\text{product 2 monthly quota})
+$$
+
+$$
+x_3 \leq 12{,}100 
+\quad (\text{product 3 monthly quota})
+$$
+
+$$
+x_1 \geq 20\, y_1 
+\quad (\text{minimum batch for product 1})
+$$
+
+$$
+x_2 \geq 20\, y_2 
+\quad (\text{minimum batch for product 2})
+$$
+
+$$
+x_3 \geq 16\, y_3 
+\quad (\text{minimum batch for product 3})
+$$
+
+$$
+x_1 \leq 5300\, y_1 
+\quad (\text{linking product 1 activation})
+$$
+
+$$
+x_2 \leq 4500\, y_2 
+\quad (\text{linking product 2 activation})
+$$
+
+$$
+x_3 \leq 5400\, y_3 
+\quad (\text{linking product 3 activation})
+$$
+
+**where**
+
+$$
+x_1, x_2, x_3 \geq 0 
+\quad (\text{integer, production amount in 100kg units})
+$$
+
+$$
+y_1, y_2, y_3 \in \{0,1\} 
+\quad (\text{binary, activation of production line})
+$$",
+"A factory needs to rent a warehouse to store materials for the next 4 months. The required warehouse area for each month is listed in 39-1.csv.The longer the rental contract period, the greater the discount on warehouse rental fees. The specific data is listed in 39-2.csv.
+
+The warehouse rental contract can be processed at the beginning of each month, and each contract specifies the rental area and period. Therefore, the factory can rent a contract on any month, and each time, they can sign one contract or multiple contracts with different rental areas and rental periods. The overall goal is to minimize the rental fees paid. Try to establish a linear programming mathematical model based on the above requirements.","Large_Scale_Or_Files/Other_example/39-1.csv
+Large_Scale_Or_Files/Other_example/39-2.csv","## Mathematical Model
+
+**Minimize**
+
+$$
+28\, (x_{1,1} + x_{2,1} + x_{3,1} + x_{4,1})
++ 45\, (x_{1,2} + x_{2,2} + x_{3,2})
++ 60\, (x_{1,3} + x_{2,3})
++ 73\, x_{1,4}
+$$
+
+**subject to**
+
+$$
+x_{1,1} + x_{1,2} + x_{1,3} + x_{1,4} \geq 1500 
+\quad (\text{month 1})
+$$
+
+$$
+x_{1,2} + x_{1,3} + x_{1,4} + x_{2,1} + x_{2,2} + x_{2,3} \geq 1000 
+\quad (\text{month 2})
+$$
+
+$$
+x_{1,3} + x_{1,4} + x_{2,2} + x_{2,3} + x_{3,1} + x_{3,2} \geq 2000 
+\quad (\text{month 3})
+$$
+
+$$
+x_{1,4} + x_{2,3} + x_{3,2} + x_{4,1} \geq 1200 
+\quad (\text{month 4})
+$$
+
+**where**
+
+$$
+x_{s,p} \geq 0 
+\quad \text{for } s \in \{1,2,3,4\},\ p \in \{1,2,3,4\}
+\quad \text{only if } s+p-1 \leq 4
+$$",
+"Red Bean Clothing Factory uses three specialized machines to produce shirts, short-sleeved shirts, and casual wear. The labor, material, selling price, and variable cost per unit for the three products are given in 41.csv.
+
+It is known that the factory has a weekly labor capacity of 150 units and a material capacity of 160 units. The fixed costs per week for producing shirts, short-sleeved shirts, and casual wear with the specialized machines are 2000, 1500, and 1000, respectively. The factory incurs a total fixed cost of $4500 per week, regardless of how many products are produced. Design a weekly production plan for the factory to maximize profit.",Large_Scale_Or_Files/Other_example/41.csv,"## Mathematical Model
+
+**Maximize**
+
+$$
+Z = 60\, x_1 + 40\, x_2 + 100\, x_3 - 4500
+$$
+
+**subject to**
+
+$$
+3\, x_1 + 2\, x_2 + 6\, x_3 \leq 150 
+\quad (\text{labor constraint})
+$$
+
+$$
+4\, x_1 + 3\, x_2 + 6\, x_3 \leq 160 
+\quad (\text{material constraint})
+$$
+
+**where**
+
+$$
+x_1, x_2, x_3 \geq 0
+$$
+
+$$
+x_1 = \text{shirts}, 
+\quad x_2 = \text{short-sleeved shirts}, 
+\quad x_3 = \text{casual wear}
+$$",
+"For a certain daytime and nighttime service bus route, the number of drivers and crew members required during each time period is given in 42.csv:
+
+Assuming that the drivers and crew members start working at the beginning of each time period and work continuously for 8 hours, how many drivers and crew members should be assigned to this bus route at least? Write down the linear programming model for this problem.",Large_Scale_Or_Files/Other_example/42.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+x_1 + x_2 + x_3 + x_4 + x_5 + x_6
+$$
+
+**subject to**
+
+$$
+x_1 + x_6 \geq 60 \quad (\text{shift 1 requirement})
+$$
+
+$$
+x_1 + x_2 \geq 70 \quad (\text{shift 2 requirement})
+$$
+
+$$
+x_2 + x_3 \geq 60 \quad (\text{shift 3 requirement})
+$$
+
+$$
+x_3 + x_4 \geq 50 \quad (\text{shift 4 requirement})
+$$
+
+$$
+x_4 + x_5 \geq 20 \quad (\text{shift 5 requirement})
+$$
+
+$$
+x_5 + x_6 \geq 30 \quad (\text{shift 6 requirement})
+$$
+
+**where**
+
+$$
+x_1, x_2, x_3, x_4, x_5, x_6 \geq 0 
+\quad \text{and are integers}
+$$",
+"A factory produces three products, I, II, and III. Each product goes through two processing procedures, A and B. The factory has two types of equipment, A1 and A2, to complete procedure A, and three types of equipment, B1, B2, and B3, to complete procedure B. Product I can be processed on either type of A equipment or any type of B equipment. Product II can be processed on any type of A equipment, but when completing procedure B, it can only be processed on B1 equipment. Product III can only be processed on A2 and B2 equipment. Given the processing time, raw material cost, product selling price, available equipment operating time, and equipment cost at full load for each type of equipment, as shown in 43.csv, determine the optimal production plan to maximize profit.",Large_Scale_Or_Files/Other_example/43.csv,"## Mathematical Model
+
+**Maximize**
+
+$$
+Z = 1.00\, x_I + 1.65\, x_{II} + 2.30\, x_{III}
+- \frac{300\, (5\, x_{I,A1} + 10\, x_{II,A1})}{6000}
+- \frac{321\, (7\, x_{I,A2} + 9\, x_{II,A2} + 12\, x_{III,A2})}{10000}
+- \frac{250\, (6\, x_{I,B1} + 8\, x_{II,B1})}{4000}
+- \frac{783\, (4\, x_{I,B2} + 11\, x_{III,B2})}{7000}
+- \frac{200\, (7\, x_{I,B3})}{4000}
+$$
+
+**subject to**
+
+$$
+x_I = x_{I,A1} + x_{I,A2}
+\quad (\text{Product I, procedure A})
+$$
+
+$$
+x_{II} = x_{II,A1} + x_{II,A2}
+\quad (\text{Product II, procedure A})
+$$
+
+$$
+x_{III} = x_{III,A2}
+\quad (\text{Product III, procedure A})
+$$
+
+$$
+x_I = x_{I,B1} + x_{I,B2} + x_{I,B3}
+\quad (\text{Product I, procedure B})
+$$
+
+$$
+x_{II} = x_{II,B1}
+\quad (\text{Product II, procedure B})
+$$
+
+$$
+x_{III} = x_{III,B2}
+\quad (\text{Product III, procedure B})
+$$
+
+**equipment time constraints**
+
+$$
+5\, x_{I,A1} + 10\, x_{II,A1} \leq 6000 
+\quad (\text{equipment time A1})
+$$
+
+$$
+7\, x_{I,A2} + 9\, x_{II,A2} + 12\, x_{III,A2} \leq 10000 
+\quad (\text{equipment time A2})
+$$
+
+$$
+6\, x_{I,B1} + 8\, x_{II,B1} \leq 4000 
+\quad (\text{equipment time B1})
+$$
+
+$$
+4\, x_{I,B2} + 11\, x_{III,B2} \leq 7000 
+\quad (\text{equipment time B2})
+$$
+
+$$
+7\, x_{I,B3} \leq 4000
+\quad (\text{equipment time B3})
+$$
+
+**where**
+
+$$
+x_{I,A1}, x_{I,A2}, x_{II,A1}, x_{II,A2}, x_{III,A2} \geq 0
+$$
+
+$$
+x_{I,B1}, x_{I,B2}, x_{I,B3}, x_{II,B1}, x_{III,B2} \geq 0
+$$
+
+$$
+x_I, x_{II}, x_{III} \geq 0
+$$",
+"A certain restaurant operates 24 hours a day and requires a minimum number of waitstaff as shown in 44.csv.
+
+Each waitstaff works continuously for 8 hours a day. The goal is to find the minimum number of waitstaff that satisfies the above conditions and represent this problem as a linear programming model.",Large_Scale_Or_Files/Other_example/44.csv,"## Mathematical Model
+
+**Minimize**
+
+$$
+x_1 + x_2 + x_3 + x_4 + x_5 + x_6
+$$
+
+**subject to**
+
+$$
+x_1 + x_6 \geq 4 
+\quad (\text{coverage from 2am to 6am})
+$$
+
+$$
+x_1 + x_2 \geq 8 
+\quad (\text{coverage from 6am to 10am})
+$$
+
+$$
+x_2 + x_3 \geq 10 
+\quad (\text{coverage from 10am to 2pm})
+$$
+
+$$
+x_3 + x_4 \geq 4 
+\quad (\text{coverage from 2pm to 6pm})
+$$
+
+$$
+x_4 + x_5 \geq 8 
+\quad (\text{coverage from 6pm to 10pm})
+$$
+
+$$
+x_5 + x_6 \geq 4 
+\quad (\text{coverage from 10pm to 2am})
+$$
+
+**where**
+
+$$
+x_1, x_2, x_3, x_4, x_5, x_6 \geq 0 
+\quad \text{and are integers}
+$$",
+"A company has a fixed investment budget and is evaluating a series of potential investment projects. Each project requires an initial investment and is expected to generate a specific Net Present Value (NPV). The company's goal is to select a portfolio of projects that will maximize the total expected NPV while ensuring that the total investment does not exceed the available budget, as described in project.csv. The company's total budget is $1000000.",Large_Scale_Or_Files/Other_example/1/project.csv,"\[
+\max Z = 60x_{1} + 50x_{2} + 45x_{3} + 35x_{4} +28x_{5}
+\]
+
+
+\[
+50x_{1} + 40x_{2} + 30x_{3} + 25x_{4} + 20x_{5}
+\le 1000000
+\]
+
+
+\[
+x_{j} \in \{0,1\},\quad j = 1,2,3,4,5
+\]",
+"A company plans to open a number of new warehouses to serve a group of customers. The decision maker is faced with the challenge of balancing the fixed costs of opening the warehouses with the variable costs of transporting goods from the warehouses to the customers. Each potential warehouse location has a fixed annual operating cost and a maximum service capacity. All customers' needs must be met . The needs about the customer are in table demand.csv and the transport costs are in table cost.csv. Currently there are two potential warehouses to choose from, Warehouse W1 has a fixed annual cost of $2,000,000 and a capacity of 1,000.Warehouse W2 has a fixed annual cost of $2,500,000 and a capacity of 1,500.The company's objective is to minimise costs while meeting the needs of its customers.","Large_Scale_Or_Files/Other_example/2/cost.csv
+Large_Scale_Or_Files/Other_example/2/demand.csv","**Objective Function:** 
+\[
+\min Z = 2\,000\,000\,y_{W1} +\; 2\,500\,000\,y_{W2}
++\bigl(10x_{C1,W1} + 15x_{C2,W1} + 20x_{C3,W1}
++ 18x_{C1,W2} + 12x_{C2,W2} + 9x_{C3,W2}\bigr)
+\]
+
+**Constraints:** 
+\[
+x_{C1,W1} + x_{C1,W2} = 800
+\]
+\[
+x_{C2,W1} + x_{C2,W2} = 600
+\]
+\[
+x_{C3,W1} + x_{C3,W2} = 500
+\]
+\[
+x_{C1,W1} + x_{C2,W1} + x_{C3,W1} \le 1000\,y_{W1}
+\]
+\[
+x_{C1,W2} + x_{C2,W2} + x_{C3,W2} \le 1500\,y_{W2}
+\]
+
+**Decision Variables:** 
+\[
+y_j \in \{0,1\}, \quad j \in \{W1, W2\}
+\]
+\[
+x_{ij} \ge 0, \quad i \in \{C1, C2, C3\}, j \in \{W1, W2\}
+\]",
+"There are 3 candidate plants F1, F2, and F3, which can be built or not, and 3 customers C1, C2, and C3, which have fixed demand and need to be distributed by the built plants. The unit transport cost per factory-customer distribution and the fixed construction cost of the factories are shown in cost.csv, and the customer demand is shown in demand.csv. How should the factories be built to minimise the cost while meeting the customer demand?","Large_Scale_Or_Files/Other_example/3/cost.csv
+Large_Scale_Or_Files/Other_example/3/demand.csv","**Objective Function:** 
+\[
+\min Z = 10\,000\,y_{1} + 12\,000\,y_{2} + 15\,000\,y_{3}
++c_{11}x_{11} + c_{12}x_{12} + c_{13}x_{13}
++ c_{21}x_{21} + c_{22}x_{22} + c_{23}x_{23}
++ c_{31}x_{31} + c_{32}x_{32} + c_{33}x_{33}
+\]
+
+**Constraints:** 
+Demand requirements: 
+\[
+x_{11} + x_{12} + x_{13} = 80
+\]
+\[
+x_{21} + x_{22} + x_{23} = 100
+\]
+\[
+x_{31} + x_{32} + x_{33} = 60
+\]
+
+Capacity constraints for facility 1: 
+\[
+x_{11} + x_{21} + x_{31} \le 150\,y_{1}
+\]
+\[
+x_{12} + x_{22} + x_{32} \le 150\,y_{1}
+\]
+\[
+x_{13} + x_{23} + x_{33} \le 150\,y_{1}
+\]
+
+Capacity constraints for facility 2: 
+\[
+x_{11} + x_{21} + x_{31} \le 200\,y_{2}
+\]
+\[
+x_{12} + x_{22} + x_{32} \le 200\,y_{2}
+\]
+\[
+x_{13} + x_{23} + x_{33} \le 200\,y_{2}
+\]
+
+Capacity constraints for facility 3: 
+\[
+x_{11} + x_{21} + x_{31} \le 180\,y_{3}
+\]
+\[
+x_{12} + x_{22} + x_{32} \le 180\,y_{3}
+\]
+\[
+x_{13} + x_{23} + x_{33} \le 180\,y_{3}
+\]
+
+**Decision Variables:** 
+\[
+x_{ij} \ge 0,\quad \forall i,j
+\]
+\[
+y_{j} \in \{0,1\},\quad j = 1,2,3
+\]",
+"A shopping centre needs to select items for display. Currently there are 5 items, each with a value and weight limit. The merchandise counter holds 15 units of weight. The value and weight information for the items is shown in table value.csv. The goal is to select a number of items so that the total value is maximized and the total weight does not exceed the weight.",Large_Scale_Or_Files/Other_example/4/value.csv,"**Objective Function:** 
+\[
+\max Z = 10x_{1} + 40x_{2} + 30x_{3} + 50x_{4} + 35x_{5}
+\]
+
+**Constraint:** 
+\[
+2x_{1} + 5x_{2} + 4x_{3} + 8x_{4} + 7x_{5}
+\le 15
+\]
+
+**Decision Variables:** 
+\[
+x_{i} \in \{0,1\}, \quad i = 1,2,3,4,5
+\]",
+"Service centres need to be opened at four customer locations 1,2,3,4. Each centre has a fixed cost, and the cost of serving customers varies from centre to centre. The exact cost is shown in cost.csv. It is necessary to minimise the total cost while satisfying that all customers are served.",Large_Scale_Or_Files/Other_example/5/cost.csv,"**Objective Function:** 
+\[
+\min Z = 20\,000\,y_{1} + 30\,000\,y_{2} +25\,000\,y_{3}
++ \sum_{i=1}^{3}\sum_{j=1}^{4} c_{ij}\,x_{ij}
+\]
+
+**Assignment Constraints:** 
+\[
+x_{11} + x_{21} + x_{31} = 1
+\] 
+\[
+x_{12} + x_{22} + x_{32} = 1
+\] 
+\[
+x_{13} + x_{23} + x_{33} = 1
+\] 
+\[
+x_{14} + x_{24} + x_{34} = 1
+\]
+
+**Linking Constraints:** 
+\[
+x_{ij} \le y_{i}
+\quad \forall\,i=1,2,3,j=1,2,3,4
+\]
+
+**Decision Variables:** 
+\[
+y_{i} \in \{0,1\}, \quad i=1,2,3
+\] 
+\[
+x_{ij} \in \{0,1\}, \quad i=1,2,3,j=1,2,3,4
+\]",
+"In a regional electricity market, an electric utility is required to make purchasing and scheduling decisions for generation resources for a future planning period. The company has a choice of three main types of generation: coal, gas and renewables. Since contracts with suppliers are usually purchased on a 'lot' basis, where each lot corresponds to a fixed amount of generation and orders must be placed in whole lots, as described in energy.csv, the company needs to meet its total demand (200) and minimize costs.",Large_Scale_Or_Files/Other_example/6/energy.csv,"**Objective Function:** 
+\[
+\min Z = 40x_{1} + 30x_{2} + 25x_{3}
+\]
+
+**Constraint:** 
+\[
+50x_{1} +30x_{2} +20x_{3}
+\ge 200
+\]
+
+**Decision Variables:** 
+\[
+x_{i} \in \mathbb{R}, \quad i = 1,2,3
+\]",
+"A factory produces five products (P1-P5), each of which needs to be purchased in batches of a fixed 10 units each. The production of each unit consumes resources R1-R3, respectively; the total supply of resources is finite;The total amount of resource R1 is 300, the total amount of resource R2 is 250 , and the total amount of resource R3 is 200 and there is an upper demand for each product, with product information in project.csv. The objective is to maximize the total profit while satisfying the resource and demand constraints.",Large_Scale_Or_Files/Other_example/7/project.csv,"**Objective Function:** 
+\[
+\max Z = 500x_{1} + 600x_{2} +400x_{3} + 300x_{4} +200x_{5}
+\]
+
+**Constraints:** 
+\[
+20x_{1} + 40x_{2} + 10x_{3} + 30x_{4} + 20x_{5} \le300
+\] 
+\[
+30x_{1} + 10x_{2} + 20x_{3} + 20x_{4} + 10x_{5} \le250
+\] 
+\[
+10x_{1} + 20x_{2} + 30x_{3} + 20x_{4} + 10x_{5} \le 200
+\] 
+\[
+x_{1} \le 10
+\] 
+\[
+x_{2} \le 8
+\] 
+\[
+x_{3} \le 6
+\] 
+\[
+x_{4} \le 5
+\] 
+\[
+x_{5} \le 4
+\]
+
+**Decision Variables:** 
+\[
+x_{i} \in \mathbb{Z}, \quad i = 1,2,3,4,5
+\]",
+"There are 8 courses, each of which consumes a certain number of credits and brings in interest points. The student credit limit is 12 and specific course information is available at course.csv. Courses need to be selected to maximize the total interest points without exceeding the credit limit.",Large_Scale_Or_Files/Other_example/8/course.csv,"**Objective Function:** 
+\[
+\max Z = 8u_{1} + 7u_{2} + 6u_{3} + 9u_{4} + 5u_{5} + 6u_{6} + 4u_{7} + 8u_{8}
+\]
+
+**Constraint:** 
+\[
+3u_{1} + 4u_{2} + 2u_{3} + 3u_{4} + 4u_{5} + 3u_{6} + 2u_{7} + 3u_{8}
+\le 12
+\]
+
+**Decision Variables:** 
+\[
+u_{i} \in \{0,1\}, \quad i = 1,2,\dots,8
+\]",
+"There are 2 source locations (S1,S2) and 3 demand locations (D1-D3). Each truck is loaded with 10 units of cargo and can only be dispatched in whole trucks (integer trips).S1 can supply 100 units of cargo and S2 can supply 150 units of cargo.D1 needs 80 units of cargo, D2 needs 120 units of cargo and D3 needs 50 units of cargo. The unit costs for each truch in different routes are known in cost.csv. The cost in the table represents the cost per cargo. The source of goods is constrained and the demand is fixed. Our goal is to meet all demands and minimize the total transportation cost, which is measured in units of each cargo.",Large_Scale_Or_Files/Other_example/9/cost.csv,"**Objective Function:** 
+\[
+\min Z = 100x_{11} +120x_{12} +130x_{13}
++110x_{21} + 115x_{22} +105x_{23}
+\]
+
+**Constraints:** 
+\[
+10x_{11} + 10x_{21} = 80
+\] 
+\[
+10x_{12} + 10x_{22} = 120
+\] 
+\[
+10x_{13} + 10x_{23} = 50
+\] 
+\[
+10\bigl(x_{11} + x_{12} + x_{13}\bigr) \le 100
+\] 
+\[
+10\bigl(x_{21} + x_{22} + x_{23}\bigr) \le 150
+\]
+
+**Decision Variables:** 
+\[
+x_{ij} \in \mathbb{Z}, \quad i = 1,2, j = 1,2,3
+\]",
+"A factory has three machining machines - M1, M2, and M3 - that are required to complete three separate tasks A, B, and C. Each task can only be completed on one machine at a time, and the machining costs vary depending on the machine and the task, as specified in cost.csv. The decision maker needs to select a machine for each task that minimises the total machining cost for all tasks. The decision maker needs to select one machine for each task to minimise the total machining cost for all tasks.",Large_Scale_Or_Files/Other_example/10/cost.csv,"**Objective Function:** 
+\[
+\min Z =\; 10x_{11} + 20x_{12} + 15x_{13}
++12x_{21} + 18x_{22} + 17x_{23}
++20x_{31} + 25x_{32} + 19x_{33}
+\]
+
+**Assignment Constraints:** 
+\[
+x_{11} + x_{21} + x_{31} = 1
+\] 
+\[
+x_{12} + x_{22} + x_{32} = 1
+\] 
+\[
+x_{13} + x_{23} + x_{33} = 1
+\]
+\[
+x_{11} + x_{12} + x_{13} = 1
+\] 
+\[
+x_{21} + x_{22} + x_{23} = 1
+\] 
+\[
+x_{31} + x_{32} + x_{33} = 1
+\]
+**Decision Variables:** 
+\[
+x_{ij} \in \{0,1\}, \quad i=1,2,3, j=1,2,3
+\]",
+"ElectroTech Manufacturing seeks to optimize its supply chain network. The company currently operates one factory at A1 and considers expanding to locations A2-A5, with parameters defined in facility_costs.csv. Distribution centers B1-B3 have fixed demands (demand_requirements.csv), and shipping costs between facilities are specified in shipping_costs.csv. The goal is to determine where to build new factories and how to route shipments to minimize total costs while meeting all demand.","Large_Scale_Or_Files/Other_example/model8/facility_costs.csv
+Large_Scale_Or_Files/Other_example/model8/shipping_costs.csv
+Large_Scale_Or_Files/Other_example/model8/demand_requirements.csv","#### Decision Variables
+- $y_k \in \{0,1\}$: 1 if factory built at $k \in \{A2,A3,A4,A5\}$, else 0
+- $x_{ij} \geq 0$: Units shipped from $i \in \{A1,A2,A3,A4,A5\}$ to $j \in \{B1,B2,B3\}$
+
+#### Objective Function
+$\min \ 175y_{A2} + 300y_{A3} + 375y_{A4} + 500y_{A5} +$
+$\quad \quad 8x_{A1B1} + 4x_{A1B2} + 3x_{A1B3} +$
+$\quad \quad 5x_{A2B1} + 2x_{A2B2} + 3x_{A2B3} +$
+$\quad \quad 4x_{A3B1} + 3x_{A3B2} + 4x_{A3B3} +$
+$\quad \quad 9x_{A4B1} + 7x_{A4B2} + 5x_{A4B3} +$
+$\quad \quad 10x_{A5B1} + 4x_{A5B2} + 2x_{A5B3}$
+
+#### Constraints
+**1. Production Capacity** 
+$\quad \quad \sum_{j} x_{A1j} \leq 30$ 
+$\quad \quad \sum_{j} x_{A2j} \leq 10y_{A2}$ 
+$\quad \quad \sum_{j} x_{A3j} \leq 20y_{A3}$ 
+$\quad \quad \sum_{j} x_{A4j} \leq 30y_{A4}$ 
+$\quad \quad \sum_{j} x_{A5j} \leq 40y_{A5}$ 
+
+**2. Demand Satisfaction** 
+$\quad \quad \sum_{i} x_{iB1} = 30$ 
+$\quad \quad \sum_{i} x_{iB2} = 20$ 
+$\quad \quad \sum_{i} x_{iB3} = 20$ 
+
+**3. Integrality** 
+$\quad \quad x_{ij} \geq 0, \quad y_k \in \{0,1\}$",
+"A logistics company needs to schedule three trucks daily to transport goods and meet customer demand across four time periods. Each truck has specific startup and transportation costs. The customer demand for the four time periods is [1,500 kg, 2,000 kg, 1,800 kg, 1,000 kg]. The company must follow these operating rules:
+
+First, trucks have minimum runtime and cooldown requirements. Once a truck is started, it must run continuously for at least 2 hours before being shut down. If turned off, it must remain idle for at least 1 hour before it can be restarted.
+
+Second, there are limits on load fluctuations. For each individual truck, the change in transported weight between two adjacent periods cannot exceed 300 kg.
+
+Additionally, the company must always maintain a 10% spare capacity buffer for emergency orders. This means the total transported weight in any period must not exceed 90% of the combined maximum capacity of the trucks **active in that period**.
+
+The goal is to find the lowest-cost scheduling solution that meets all the above constraints while fulfilling customer demand. Associated paramters are detailed in 'parameters.csv'",Large_Scale_Or_Files/Other_example/model9/parameters.csv,"### **Model Formulation**
+
+#### **1. Indices and Sets**
+
+The model uses the following indices to structure the problem:
+
+* $i \in \{1, 2, 3\}$: An index representing each **truck**.
+* $t \in \{1, 2, 3, 4\}$: An index representing each **time period**.
+
+#### **2. Parameters**
+
+These are the known inputs to the model:
+
+* $d_t$: Customer **demand** in period $t$ (kg).
+* $Q_i$: Maximum **load capacity** of truck $i$ (kg).
+* $SC_i$: **Startup cost** for truck $i$ ($).
+* $TC_i$: **Transportation cost** for truck $i$ ($/kg).
+
+#### **3. Decision Variables**
+
+The model solves for these variables to find the optimal solution:
+
+* $x_{i,t} \ge 0$: A continuous variable for the **load** transported by truck $i$ in period $t$ (kg).
+* $y_{i,t} \in \{0, 1\}$: A binary variable that is **1** if truck $i$ is **ON** in period $t$, and **0** otherwise.
+* $s_{i,t} \in \{0, 1\}$: A binary variable that is **1** if truck $i$ is **started up** at the beginning of period $t$, and **0** otherwise.
+
+#### **4. Objective Function**
+
+The objective is to **minimize the total cost**, which is the sum of all startup and transportation costs.
+$$
+\min Z = \sum_{i=1}^{3} \sum_{t=1}^{4} (SC_i \cdot s_{i,t} + TC_i \cdot x_{i,t})
+$$
+
+#### **5. Constraints**
+
+The solution must satisfy the following operational rules:
+
+**Demand Satisfaction:** The total load from all trucks must exactly meet customer demand in each period.
+$$
+\sum_{i=1}^{3} x_{i,t} = d_t \quad \forall t \in \{1, 2, 3, 4\}
+$$
+
+**Spare Capacity Buffer:** The total load transported must not exceed 80% of the combined capacity of the trucks that are **currently active**.
+$$
+\sum_{i=1}^{3} x_{i,t} \le 0.90 \sum_{i=1}^{3} (Q_i \cdot y_{i,t}) \quad \forall t \in \{1, 2, 3, 4\}
+$$
+
+**Truck Load Bounds:** A truck's load cannot exceed its maximum capacity. If the truck is inactive, its load must be zero.
+$$
+x_{i,t} \le Q_i \cdot y_{i,t} \quad \forall i, t
+$$
+
+**Startup Logic:** A startup event occurs if a truck was OFF in the previous period and is ON in the current one. It is assumed all trucks are OFF before period 1 ($y_{i,0}=0$).
+$$
+s_{i,t} \ge y_{i,t} - y_{i,t-1} \quad \forall i, t \quad (\text{where } y_{i,0} = 0)
+$$
+
+**Minimum Runtime:** If a truck starts, it must remain ON for at least two consecutive periods.
+$$
+y_{i,t} + y_{i,t+1} \ge 2 \cdot s_{i,t} \quad \forall i, t \in \{1, 2, 3\}
+$$
+
+**Minimum Downtime:** A truck that is shut down must remain off for at least one period. This prevents an ON-OFF-ON sequence.
+$$
+y_{i,t-1} + y_{i,t+1} \le y_{i,t} + 1 \quad \forall i, t \in \{2, 3\}
+$$
+
+**Load Fluctuation (Ramping):** The load of any single truck cannot change by more than 200 kg between adjacent periods. This absolute value constraint is linearized into two separate constraints.
+$$
+x_{i,t} - x_{i,t-1} \le 300 \quad \forall i, t \in \{2, 3, 4\}
+$$
+
+$$
+x_{i,t-1} - x_{i,t} \le 300 \quad \forall i, t \in \{2, 3, 4\}
+$$
+
+**Variable Types:** Defines the domain for each decision variable.",
+"A supermarket needs to replenish its daily stock of flour and rice to meet customer demand while minimizing total procurement costs. The exact required quantities are 100 kg of flour and 80 kg of rice. No more, no less. There are two existing suppliers (Supplier 1 and 2) that must be used, though order quantities from them can vary. Additionally, two new suppliers (Supplier 3 and 4) are available, but selecting any new supplier incurs a fixed management fee of 50 RMB per supplier (e.g., choosing Supplier 3 adds 50 RMB, while selecting both adds 100 RMB). If a new supplier is not chosen, no orders can be placed with them. The total cost consists of procurement expenses from all selected suppliers plus the fixed fees for any new suppliers. The objective is to minimize total cost as the primary goal, with a secondary preference for using fewer new suppliers. Detailed information for each supply is in 'supplier_details.csv'.",Large_Scale_Or_Files/Other_example/model10/supplier_details.csv,"Objective Function:
+    Minimize 200*theta1 + 250*theta2 + 380*theta3 + 350*theta4 + 50*y3 + 50*y4
+
+    Subject To:
+    // Apple demand constraint
+    30*theta1 + 20*theta2 + 40*theta3 + 10*theta4 = 100
+
+    // Banana demand constraint
+    20*theta1 + 30*theta2 + 10*theta3 + 40*theta4 = 80
+
+    // New supplier 3 activation (if y3=0, theta3=0)
+    theta3 <= 1000*y3
+
+    // New supplier 4 activation (if y4=0, theta4=0)
+    theta4 <= 1000*y4
+
+    // Non-negativity constraints
+    theta1 >= 0
+    theta2 >= 0
+    theta3 >= 0
+    theta4 >= 0
+
+    // Binary variables for new suppliers
+    y3 in {0,1}
+    y4 in {0,1}",

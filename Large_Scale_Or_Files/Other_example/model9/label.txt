@@ -1,0 +1,76 @@
+### Mathematical Model (Expanded Formulas in English)
+
+**Objective Function: Minimize Total Cost**  
+TotalCost =  
+(C1u * gamma11 + C1mr * p11) + (C1u * gamma12 + C1mr * p12) + (C1u * gamma13 + C1mr * p13) + (C1u * gamma14 + C1mr * p14) +  
+(C2u * gamma21 + C2mr * p21) + (C2u * gamma22 + C2mr * p22) + (C2u * gamma23 + C2mr * p23) + (C2u * gamma24 + C2mr * p24) +  
+(C3u * gamma31 + C3mr * p31) + (C3u * gamma32 + C3mr * p32) + (C3u * gamma33 + C3mr * p33) + (C3u * gamma34 + C3mr * p34)  
+
+---
+
+**Constraints**  
+
+1. **Load Balance (for each time t):**  
+   - t=1: p11 + p21 + p31 >= 1500  
+   - t=2: p12 + p22 + p32 >= 2000  
+   - t=3: p13 + p23 + p33 >= 1800  
+   - t=4: p14 + p24 + p34 >= 1000  
+
+2. **Reserve Requirement (for each time t):**  
+   - t=1: (1000*a11 + 800*a21 + 1200*a31) - (p11 + p21 + p31) >= 600  
+   - t=2: (1000*a12 + 800*a22 + 1200*a32) - (p12 + p22 + p32) >= 600  
+   - t=3: (1000*a13 + 800*a23 + 1200*a33) - (p13 + p23 + p33) >= 600  
+   - t=4: (1000*a14 + 800*a24 + 1200*a34) - (p14 + p24 + p34) >= 600  
+
+3. **Power Output Bounds (for each truck g and time t):**  
+   - Truck 1:  
+     - t=1: 0 <= p11 <= 1000*a11  
+     - t=2: 0 <= p12 <= 1000*a12  
+     - t=3: 0 <= p13 <= 1000*a13  
+     - t=4: 0 <= p14 <= 1000*a14  
+   - Truck 2:  
+     - t=1: 0 <= p21 <= 800*a21  
+     - t=2: 0 <= p22 <= 800*a22  
+     - t=3: 0 <= p23 <= 800*a23  
+     - t=4: 0 <= p24 <= 800*a24  
+   - Truck 3:  
+     - t=1: 0 <= p31 <= 1200*a31  
+     - t=2: 0 <= p32 <= 1200*a32  
+     - t=3: 0 <= p33 <= 1200*a33  
+     - t=4: 0 <= p34 <= 1200*a34  
+
+4. **Ramp Rate Limits (for each truck g and t >= 2):**  
+   - Truck 1:  
+     - t=2: p12 - p11 <= 200, p11 - p12 <= 200  
+     - t=3: p13 - p12 <= 200, p12 - p13 <= 200  
+     - t=4: p14 - p13 <= 200, p13 - p14 <= 200  
+   - Truck 2:  
+     - t=2: p22 - p21 <= 200, p21 - p22 <= 200  
+     - t=3: p23 - p22 <= 200, p22 - p23 <= 200  
+     - t=4: p24 - p23 <= 200, p23 - p24 <= 200  
+   - Truck 3:  
+     - t=2: p32 - p31 <= 200, p31 - p32 <= 200  
+     - t=3: p33 - p32 <= 200, p32 - p33 <= 200  
+     - t=4: p34 - p33 <= 200, p33 - p34 <= 200  
+
+5. **Minimum Uptime/Downtime:**  
+   - **Startup (gamma_gt=1):**  
+     - Truck 1:  
+       - t=1: a11 + a12 >= 2*gamma11  
+       - t=2: a12 + a13 >= 2*gamma12  
+       - t=3: a13 + a14 >= 2*gamma13  
+     - Truck 2/3: Similar constraints for gamma21, gamma22, ..., gamma34.  
+   - **Shutdown (eta_gt=1):**  
+     - Truck 1:  
+       - t=1: a12 <= 1 - eta11  
+       - t=2: a13 <= 1 - eta12  
+       - t=3: a14 <= 1 - eta13  
+       - t=4: (No constraint for t=4 shutdown)  
+     - Truck 2/3: Similar constraints for eta21, eta22, ..., eta34.  
+
+6. **Logical Constraints:**  
+   - For t=2,3,4:  
+     - Truck 1:  
+       - a1t - a1(t-1) = gamma1t - eta1t  
+       - gamma1t + eta1t <= 1  
+     - Truck 2/3: Similar constraints.  
