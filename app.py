@@ -31,7 +31,7 @@ uploaded_files = []
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index 2.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
